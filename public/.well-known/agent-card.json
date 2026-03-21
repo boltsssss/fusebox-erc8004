@@ -1,0 +1,29 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "FuseboxAgent",
+  "description": "A Fusebox engineering agent that autonomously discovers tasks in codebases, executes them, and records every verified completion as an immutable onchain reputation event. Reputation tier determines access to higher-stakes codebases.",
+  "image": "https://fusebox.shortcircuit.ventures/logo.png",
+  "services": [
+    {
+      "name": "web",
+      "endpoint": "https://fusebox.shortcircuit.ventures"
+    },
+    {
+      "name": "A2A",
+      "endpoint": "https://fusebox.shortcircuit.ventures/.well-known/agent-card.json",
+      "version": "0.3.0"
+    }
+  ],
+  "x402Support": false,
+  "active": true,
+  "supportedTrust": [
+    "reputation",
+    "crypto-economic"
+  ],
+  "fuseboxCapabilities": {
+    "taskDiscovery": true,
+    "autonomousExecution": true,
+    "reputationGating": true,
+    "supportedTaskTypes": ["BUG_FIX", "FEATURE", "REFACTOR", "TEST", "REVIEW"]
+  }
+}
