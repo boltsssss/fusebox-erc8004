@@ -404,7 +404,8 @@ const AGENT_REGISTRY = "0x21CF7F8E526fd82c64C1d758E0CEbB707Ae2da31";
 const REPUTATION_REGISTRY = "0x5a79322a978b7CB0Aee38CdA7C526bA40f95809C";
 const REP_ABI = [
   "function recordCompletion(uint256 agentId, uint8 taskType, uint8 score, bytes32 evidenceHash, string calldata metadata) external",
-  "function getReputation(uint256 agentId) external view returns (uint256 tasks, uint256 avgScore, uint8 tier, string memory tierName)"
+  "function getReputation(uint256 agentId) external view returns (uint256 tasks, uint256 avgScore, uint8 tier, string memory tierName)",
+  "event TaskCompleted(uint256 indexed agentId, uint8 taskType, uint8 score, address indexed verifier, bytes32 evidenceHash, uint256 completionIndex)"
 ];
 
 const AGENTS = [
@@ -439,6 +440,7 @@ async function init() {
     repContract = new ethers.Contract(REPUTATION_REGISTRY, REP_ABI, wallet);
     const bal = await provider.getBalance(wallet.address);
     document.getElementById("balance").textContent = parseFloat(ethers.formatEther(bal)).toFixed(4) + " ETH";
+    // Load reputation stats
     for (let i = 0; i < 5; i++) {
       try {
         const r = await repContract.getReputation(i);
@@ -449,6 +451,34 @@ async function init() {
         for(let t=0;t<Number(r[0]);t++) allScores.push(Number(r[1]));
       } catch(e){}
     }
+
+    // Query TaskCompleted events to rebuild history
+    try {
+      const filter = repContract.filters.TaskCompleted();
+      const events = await repContract.queryFilter(filter, 0, "latest");
+      const TASK_TITLES_MAP = {
+        0: { title: "Race condition in async queue",   file: "src/workers/queue.ts" },
+        1: { title: "Webhook retry with backoff",       file: "src/services/webhook.ts" },
+        2: { title: "Extract auth middleware",          file: "src/routes/*.ts" },
+        3: { title: "Payment module test coverage",    file: "tests/payment.spec.ts" },
+        4: { title: "API gateway architecture review", file: "src/gateway/**" },
+      };
+      for (const e of events) {
+        const agentId  = Number(e.args[0]);
+        const taskType = Number(e.args[1]);
+        const score    = Number(e.args[2]);
+        const txHash   = e.transactionHash;
+        const block    = await provider.getBlock(e.blockNumber);
+        const time     = block ? new Date(block.timestamp*1000).toLocaleTimeString() : "—";
+        if (agentId < 5) {
+          agentState[agentId].history.push({
+            title: TASK_TITLES_MAP[taskType]?.title || "Task #"+taskType,
+            file:  TASK_TITLES_MAP[taskType]?.file  || "—",
+            score, txHash, time
+          });
+        }
+      }
+    } catch(e) { console.warn("Event query failed:", e.message); }
     updateStats();
   } catch(e) {
     document.getElementById("boot-text").textContent = "Demo mode — simulating onchain";
