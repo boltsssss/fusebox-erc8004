@@ -1,0 +1,16 @@
+{
+  "network": "base-sepolia",
+  "chainId": 84532,
+  "agentRegistry": "0x21CF7F8E526fd82c64C1d758E0CEbB707Ae2da31",
+  "reputationRegistry": "0x5a79322a978b7CB0Aee38CdA7C526bA40f95809C",
+  "deployer": "0xfc34044B076cd0698E2644444A5C0c0683fF9241",
+  "deployedAt": "2026-03-22T00:26:00Z",
+  "explorer": {
+    "agentRegistry": "https://sepolia.basescan.org/address/0x21CF7F8E526fd82c64C1d758E0CEbB707Ae2da31",
+    "reputationRegistry": "https://sepolia.basescan.org/address/0x5a79322a978b7CB0Aee38CdA7C526bA40f95809C"
+  },
+  "liveTxHashes": {
+    "agentRegistered": "0x7b651f5d05ed2cf4e69d87fba46c5296c07ca65a8e52c50d3189da8f5f07fb99",
+    "taskCompletion": "0x8e027a68bad04202810d813251cec520f14f2c80d7aebf2467dc32049ce39555"
+  }
+}
