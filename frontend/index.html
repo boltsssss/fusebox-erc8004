@@ -10,370 +10,337 @@
     --bg: #0f0e0b;
     --surface: #1a1916;
     --surface2: #222018;
+    --surface3: #2a2820;
     --orange: #F97316;
-    --orange-dim: rgba(249,115,22,0.12);
+    --orange-dim: rgba(249,115,22,0.1);
     --text: #F0EEE9;
-    --muted: rgba(240,238,233,0.5);
-    --border: rgba(240,238,233,0.08);
+    --muted: rgba(240,238,233,0.45);
+    --border: rgba(240,238,233,0.07);
+    --border2: rgba(240,238,233,0.12);
     --green: #22C55E;
     --blue: #4A9EFF;
     --yellow: #FBBF24;
+    --purple: #A78BFA;
     --red: #EF4444;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; min-height: 100vh; }
-  
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
   /* HEADER */
   header {
+    flex-shrink: 0;
     border-bottom: 1px solid var(--border);
-    padding: 20px 32px;
+    padding: 0 24px;
+    height: 52px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 16px;
   }
-  .logo {
-    font-family: 'Space Mono', monospace;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  .network-badge {
-    font-family: monospace;
-    font-size: 11px;
-    color: var(--green);
-    background: rgba(34,197,94,0.1);
-    border: 1px solid rgba(34,197,94,0.2);
-    padding: 4px 10px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .network-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  .logo { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; display: flex; align-items: center; gap: 8px; }
+  .logo-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
 
-  /* LAYOUT */
-  .main { display: grid; grid-template-columns: 1fr 380px; gap: 0; height: calc(100vh - 61px); }
-  .left { overflow-y: auto; padding: 28px 32px; border-right: 1px solid var(--border); }
-  .right { overflow-y: auto; padding: 24px 24px; display: flex; flex-direction: column; gap: 20px; }
+  .header-center { display: flex; align-items: center; gap: 8px; }
+  .stat-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-family: monospace; font-size: 11px; display: flex; align-items: center; gap: 6px; }
+  .stat-pill-val { color: var(--orange); font-weight: 700; }
+  .stat-pill-label { color: var(--muted); }
 
-  /* SECTION HEADERS */
-  .section-label {
-    font-family: monospace;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .network-badge { font-family: monospace; font-size: 10px; color: var(--green); background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); padding: 3px 9px; border-radius: 4px; display: flex; align-items: center; gap: 5px; }
+  .network-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+  .balance { font-family: monospace; font-size: 11px; color: var(--muted); }
+  .btn { background: var(--orange); color: #0f0e0b; border: none; cursor: pointer; font-family: monospace; font-size: 11px; font-weight: 700; padding: 7px 16px; border-radius: 5px; transition: opacity .2s; letter-spacing: .04em; white-space: nowrap; }
+  .btn:hover { opacity: .85; }
+  .btn:disabled { opacity: .35; cursor: not-allowed; }
 
-  /* STATS ROW */
-  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-  }
-  .stat-val { font-family: monospace; font-size: 24px; font-weight: 700; color: var(--orange); }
-  .stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  /* BODY LAYOUT */
+  .body { flex: 1; display: grid; grid-template-columns: 1fr 260px; overflow: hidden; }
 
-  /* AGENT CARDS */
-  .agents-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
-  .agent-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 20px;
-    transition: border-color 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .agent-card.active { border-color: var(--orange); }
-  .agent-card.completing { border-color: var(--green); animation: glow 0.8s ease-in-out; }
-  @keyframes glow { 0%,100%{box-shadow:none} 50%{box-shadow:0 0 20px rgba(34,197,94,0.3)} }
-  .agent-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-  .agent-left { display: flex; align-items: center; gap: 12px; }
-  .agent-avatar {
-    width: 38px; height: 38px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
+  /* KANBAN */
+  .kanban-wrap { overflow-x: auto; overflow-y: hidden; padding: 16px 20px; display: flex; align-items: flex-start; gap: 12px; }
+
+  .col {
     flex-shrink: 0;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 100%;
   }
-  .agent-name { font-family: monospace; font-size: 13px; font-weight: 700; color: var(--text); }
-  .agent-role { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .tier-badge {
-    font-family: monospace;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    padding: 3px 10px;
-    border-radius: 4px;
-    border: 1px solid;
-  }
-  .tier-0 { color: var(--muted); border-color: var(--border); background: transparent; }
-  .tier-1 { color: #60A5FA; border-color: rgba(96,165,250,0.3); background: rgba(96,165,250,0.08); }
-  .tier-2 { color: var(--green); border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.08); }
-  .tier-3 { color: var(--yellow); border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.08); }
-  .tier-4 { color: var(--orange); border-color: rgba(249,115,22,0.3); background: rgba(249,115,22,0.08); }
-
-  .agent-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .agent-stat { text-align: center; }
-  .agent-stat-val { font-family: monospace; font-size: 16px; font-weight: 700; }
-  .agent-stat-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
-  .progress-bar-wrap { margin-top: 12px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-  .progress-bar { height: 100%; border-radius: 2px; transition: width 0.5s ease; background: var(--orange); }
-
-  .agent-status {
-    margin-top: 12px;
-    font-family: monospace;
-    font-size: 11px;
-    color: var(--muted);
+  .col-header {
     display: flex;
     align-items: center;
-    gap: 6px;
-  }
-  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
-  .status-dot.working { background: var(--orange); animation: pulse 1s infinite; }
-  .status-dot.done { background: var(--green); }
-
-  /* DISPATCH SECTION */
-  .dispatch-section { margin-bottom: 28px; }
-  .dispatch-card {
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-radius: 7px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
   }
-  .dispatch-controls { display: flex; gap: 10px; margin-bottom: 14px; }
-  select {
-    flex: 1; background: var(--surface2); border: 1px solid var(--border);
-    color: var(--text); padding: 10px 14px; border-radius: 6px; font-family: monospace; font-size: 12px;
-  }
-  .btn {
-    background: var(--orange); color: #0f0e0b; border: none; cursor: pointer;
-    font-family: monospace; font-size: 12px; font-weight: 700; padding: 10px 20px;
-    border-radius: 6px; transition: opacity 0.2s; letter-spacing: 0.04em;
-    white-space: nowrap;
-  }
-  .btn:hover { opacity: 0.85; }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn-ghost {
-    background: transparent; color: var(--text); border: 1px solid var(--border);
-    cursor: pointer; font-family: monospace; font-size: 11px; padding: 8px 14px;
-    border-radius: 6px; transition: border-color 0.2s;
-  }
-  .btn-ghost:hover { border-color: var(--orange); }
+  .col-title { font-family: monospace; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .col-count { font-family: monospace; font-size: 10px; color: var(--muted); background: var(--surface2); border-radius: 10px; padding: 1px 7px; }
 
-  .task-preview {
-    background: var(--surface2);
-    border-radius: 6px;
-    padding: 14px;
-    font-family: monospace;
-    font-size: 11px;
-    line-height: 1.7;
-    color: var(--muted);
-    display: none;
-  }
-  .task-preview.visible { display: block; }
-  .task-preview .highlight { color: var(--text); }
-  .task-preview .orange { color: var(--orange); }
+  .col-body { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; max-height: calc(100vh - 140px); padding-right: 2px; }
+  .col-body::-webkit-scrollbar { width: 3px; }
+  .col-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-  /* FEED */
-  .feed { display: flex; flex-direction: column; gap: 8px; }
-  .feed-item {
+  /* TASK CARD */
+  .task-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 12px 14px;
-    font-size: 12px;
-    animation: slideIn 0.3s ease;
+    padding: 12px;
+    cursor: default;
+    transition: border-color .2s, box-shadow .2s;
+    animation: cardIn .25s ease;
   }
-  @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
-  .feed-item.tx { border-color: rgba(34,197,94,0.3); }
-  .feed-item.tier { border-color: rgba(249,115,22,0.4); background: var(--orange-dim); }
-  .feed-meta { display: flex; justify-content: space-between; margin-bottom: 6px; }
-  .feed-time { font-family: monospace; font-size: 10px; color: var(--muted); }
-  .feed-type { font-family: monospace; font-size: 10px; font-weight: 700; }
-  .feed-type.task { color: var(--blue); }
-  .feed-type.tx { color: var(--green); }
-  .feed-type.tier { color: var(--orange); }
-  .feed-body { color: var(--text); line-height: 1.5; }
-  .feed-link { color: var(--green); text-decoration: none; font-family: monospace; font-size: 10px; word-break: break-all; }
-  .feed-link:hover { text-decoration: underline; }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .task-card.active { border-color: var(--orange); }
+  .task-card.verifying { border-color: var(--blue); }
+  .task-card.done { border-color: rgba(34,197,94,0.35); }
 
-  /* RIGHT PANEL */
-  .panel-card {
+  .task-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; margin-bottom: 8px; }
+  .task-emoji { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .task-title { font-size: 11px; line-height: 1.45; color: var(--text); flex: 1; }
+  .task-file { font-family: monospace; font-size: 9px; color: var(--muted); margin-bottom: 8px; }
+
+  .task-agent { display: flex; align-items: center; gap: 6px; }
+  .task-agent-emoji { font-size: 11px; }
+  .task-agent-name { font-family: monospace; font-size: 10px; color: var(--muted); }
+
+  .task-status { font-family: monospace; font-size: 9px; color: var(--muted); margin-top: 6px; display: flex; align-items: center; gap: 5px; }
+  .task-status-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .task-status-dot.working { background: var(--orange); animation: pulse .9s infinite; }
+  .task-status-dot.verifying { background: var(--blue); animation: pulse .9s infinite; }
+  .task-status-dot.done { background: var(--green); }
+
+  .task-score { margin-top: 6px; }
+  .task-score-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .task-score-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .5s ease; }
+  .task-score-label { font-family: monospace; font-size: 9px; color: var(--muted); margin-top: 3px; }
+
+  .task-tx { margin-top: 6px; }
+  .task-tx a { font-family: monospace; font-size: 9px; color: var(--green); text-decoration: none; }
+  .task-tx a:hover { text-decoration: underline; }
+
+  /* ARROW CONNECTORS */
+  .col-arrow { flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding-top: 32px; color: var(--border2); font-size: 16px; opacity: .6; }
+
+  /* DISPATCH BAR */
+  .dispatch-bar {
+    flex-shrink: 0;
+    border-top: 1px solid var(--border);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+  }
+  .dispatch-label { font-family: monospace; font-size: 10px; color: var(--muted); white-space: nowrap; letter-spacing: .08em; text-transform: uppercase; }
+  select { background: var(--surface2); border: 1px solid var(--border2); color: var(--text); padding: 7px 12px; border-radius: 5px; font-family: monospace; font-size: 11px; flex: 1; }
+  select:focus { outline: none; border-color: var(--orange); }
+
+  /* RIGHT SIDEBAR */
+  .sidebar { border-left: 1px solid var(--border); overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  .sidebar::-webkit-scrollbar { width: 3px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); }
+
+  .sidebar-section { }
+  .sidebar-title { font-family: monospace; font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .sidebar-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* AGENT MINI CARDS */
+  .agent-mini {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px;
+    border-radius: 7px;
+    padding: 10px 11px;
+    margin-bottom: 7px;
+    transition: border-color .2s;
   }
-  .panel-title { font-family: monospace; font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
-  
-  .contract-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
-  .contract-item { background: var(--surface2); border-radius: 6px; padding: 10px 12px; }
-  .contract-name { font-family: monospace; font-size: 10px; color: var(--muted); margin-bottom: 4px; }
-  .contract-addr { font-family: monospace; font-size: 11px; color: var(--orange); word-break: break-all; }
-  
-  .tier-table { width: 100%; border-collapse: collapse; }
-  .tier-table td { padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
-  .tier-table tr:last-child td { border-bottom: none; }
-  .tier-table td:last-child { text-align: right; font-family: monospace; font-size: 11px; color: var(--muted); }
+  .agent-mini.active { border-color: var(--orange); }
+  .agent-mini-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+  .agent-mini-left { display: flex; align-items: center; gap: 7px; }
+  .agent-mini-emoji { font-size: 13px; }
+  .agent-mini-name { font-family: monospace; font-size: 11px; font-weight: 700; }
+  .agent-mini-role { font-size: 9px; color: var(--muted); }
+  .tier-badge { font-family: monospace; font-size: 9px; font-weight: 700; letter-spacing: .08em; padding: 2px 7px; border-radius: 3px; border: 1px solid; }
+  .tier-0 { color: var(--muted); border-color: var(--border); }
+  .tier-1 { color: #60A5FA; border-color: rgba(96,165,250,.3); background: rgba(96,165,250,.07); }
+  .tier-2 { color: var(--green); border-color: rgba(34,197,94,.3); background: rgba(34,197,94,.07); }
+  .tier-3 { color: var(--yellow); border-color: rgba(251,191,36,.3); background: rgba(251,191,36,.07); }
+  .tier-4 { color: var(--orange); border-color: rgba(249,115,22,.3); background: rgba(249,115,22,.07); }
 
-  .wallet-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .wallet-label { font-size: 11px; color: var(--muted); }
-  .wallet-val { font-family: monospace; font-size: 11px; color: var(--text); }
+  .agent-mini-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+  .ams { text-align: center; }
+  .ams-val { font-family: monospace; font-size: 12px; font-weight: 700; }
+  .ams-label { font-size: 9px; color: var(--muted); }
 
-  /* CONNECTING overlay */
-  .overlay {
-    position: fixed; inset: 0; background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 16px; z-index: 100;
-  }
+  .tier-progress { margin-top: 7px; height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; }
+  .tier-progress-fill { height: 100%; border-radius: 1px; transition: width .5s; background: var(--orange); }
+
+  /* CONTRACTS */
+  .contract-item { background: var(--surface2); border-radius: 5px; padding: 8px 10px; margin-bottom: 5px; }
+  .contract-name { font-family: monospace; font-size: 9px; color: var(--muted); margin-bottom: 3px; }
+  .contract-addr { font-family: monospace; font-size: 10px; color: var(--orange); }
+  .contract-link { font-family: monospace; font-size: 9px; color: var(--green); text-decoration: none; display: block; margin-top: 3px; }
+  .contract-link:hover { text-decoration: underline; }
+
+  /* OVERLAY */
+  .overlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; z-index: 100; }
   .overlay.hidden { display: none; }
-  .spinner { width: 32px; height: 32px; border: 2px solid var(--border); border-top-color: var(--orange); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--orange); border-radius: 50%; animation: spin .8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .overlay-text { font-family: monospace; font-size: 13px; color: var(--muted); }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .overlay-text { font-family: monospace; font-size: 12px; color: var(--muted); }
 </style>
 </head>
 <body>
 
 <div id="overlay" class="overlay">
   <div class="spinner"></div>
-  <div class="overlay-text">Connecting to Base Sepolia...</div>
+  <div class="overlay-text" id="overlay-text">Connecting to Base Sepolia...</div>
 </div>
 
+<!-- HEADER -->
 <header>
-  <div class="logo">
-    <div class="logo-dot"></div>
-    FUSEBOX × ERC-8004
+  <div class="logo"><div class="logo-dot"></div>FUSEBOX × ERC-8004</div>
+  <div class="header-center">
+    <div class="stat-pill"><span class="stat-pill-val" id="stat-tasks">0</span><span class="stat-pill-label">tasks</span></div>
+    <div class="stat-pill"><span class="stat-pill-val" id="stat-txs">0</span><span class="stat-pill-label">onchain</span></div>
+    <div class="stat-pill"><span class="stat-pill-val" id="stat-avg">—</span><span class="stat-pill-label">avg score</span></div>
+    <div class="stat-pill"><span class="stat-pill-val" id="stat-upgrades">0</span><span class="stat-pill-label">tier upgrades</span></div>
   </div>
-  <div style="display:flex;align-items:center;gap:12px;">
-    <div class="network-badge"><div class="network-dot"></div> Base Sepolia</div>
-    <div id="balance-display" style="font-family:monospace;font-size:11px;color:var(--muted);">—</div>
+  <div class="header-right">
+    <div class="network-badge"><div class="network-dot"></div>Base Sepolia</div>
+    <div class="balance" id="balance">—</div>
   </div>
 </header>
 
-<div class="main">
-  <!-- LEFT: Agents + Dispatch -->
-  <div class="left">
+<!-- BODY -->
+<div class="body">
 
-    <!-- Stats -->
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-val" id="stat-tasks">0</div>
-        <div class="stat-label">Tasks Completed</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val" id="stat-txs">0</div>
-        <div class="stat-label">Onchain Events</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val" id="stat-avg">—</div>
-        <div class="stat-label">Avg Quality Score</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val" id="stat-upgrades">0</div>
-        <div class="stat-label">Tier Upgrades</div>
-      </div>
-    </div>
-
-    <!-- Dispatch -->
-    <div class="dispatch-section">
-      <div class="section-label">Dispatch Task</div>
-      <div class="dispatch-card">
-        <div class="dispatch-controls">
-          <select id="task-select" onchange="previewTask()">
-            <option value="">— Select a task type —</option>
-            <option value="0">🐛 Bug Fix — Race condition in queue worker</option>
-            <option value="1">✨ Feature — Add webhook retry logic</option>
-            <option value="2">♻️ Refactor — Extract auth middleware</option>
-            <option value="3">🧪 Test — Add coverage for payment module</option>
-            <option value="4">👁️ Review — Architecture review: API gateway</option>
-          </select>
-          <button class="btn" id="dispatch-btn" onclick="dispatchTask()" disabled>DISPATCH →</button>
+  <!-- KANBAN + DISPATCH -->
+  <div style="display:flex;flex-direction:column;overflow:hidden;">
+    <div class="kanban-wrap" id="kanban">
+      <!-- BACKLOG -->
+      <div class="col">
+        <div class="col-header">
+          <span class="col-title" style="color:var(--muted)">Backlog</span>
+          <span class="col-count" id="count-backlog">0</span>
         </div>
-        <div class="task-preview" id="task-preview"></div>
+        <div class="col-body" id="col-backlog"></div>
+      </div>
+
+      <div class="col-arrow">→</div>
+
+      <!-- ASSIGNED -->
+      <div class="col">
+        <div class="col-header">
+          <span class="col-title" style="color:var(--blue)">Assigned</span>
+          <span class="col-count" id="count-assigned">0</span>
+        </div>
+        <div class="col-body" id="col-assigned"></div>
+      </div>
+
+      <div class="col-arrow">→</div>
+
+      <!-- IN PROGRESS -->
+      <div class="col">
+        <div class="col-header">
+          <span class="col-title" style="color:var(--orange)">In Progress</span>
+          <span class="col-count" id="count-progress">0</span>
+        </div>
+        <div class="col-body" id="col-progress"></div>
+      </div>
+
+      <div class="col-arrow">→</div>
+
+      <!-- VERIFYING -->
+      <div class="col">
+        <div class="col-header">
+          <span class="col-title" style="color:var(--purple)">Verifying</span>
+          <span class="col-count" id="count-verifying">0</span>
+        </div>
+        <div class="col-body" id="col-verifying"></div>
+      </div>
+
+      <div class="col-arrow">→</div>
+
+      <!-- DONE -->
+      <div class="col">
+        <div class="col-header">
+          <span class="col-title" style="color:var(--green)">Done ✓</span>
+          <span class="col-count" id="count-done">0</span>
+        </div>
+        <div class="col-body" id="col-done"></div>
       </div>
     </div>
 
-    <!-- Agent Roster -->
-    <div class="section-label">Agent Roster</div>
-    <div class="agents-grid" id="agents-grid">
-      <!-- populated by JS -->
+    <!-- DISPATCH BAR -->
+    <div class="dispatch-bar">
+      <span class="dispatch-label">+ New Task</span>
+      <select id="task-select">
+        <option value="">— Select task to dispatch —</option>
+        <option value="0">🐛  Bug Fix — Race condition in async queue</option>
+        <option value="1">✨  Feature — Webhook retry with backoff</option>
+        <option value="2">♻️  Refactor — Extract auth middleware</option>
+        <option value="3">🧪  Test — Payment module coverage</option>
+        <option value="4">👁️  Review — API gateway architecture</option>
+      </select>
+      <button class="btn" id="dispatch-btn" onclick="dispatchTask()" disabled>DISPATCH →</button>
     </div>
-
   </div>
 
-  <!-- RIGHT: Feed + Info -->
-  <div class="right">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
 
-    <!-- Activity Feed -->
-    <div>
-      <div class="section-label" style="margin-bottom:12px;">Live Activity</div>
-      <div class="feed" id="feed">
-        <div class="feed-item" style="color:var(--muted);font-size:11px;font-family:monospace;text-align:center;padding:20px;">
-          Dispatch a task to begin
+    <div class="sidebar-section">
+      <div class="sidebar-title">Agents</div>
+      <div id="agents-list"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Contracts</div>
+      <div class="contract-item">
+        <div class="contract-name">AGENT REGISTRY (ERC-721)</div>
+        <div class="contract-addr">0x21CF...da31</div>
+        <a class="contract-link" href="https://sepolia.basescan.org/address/0x21CF7F8E526fd82c64C1d758E0CEbB707Ae2da31" target="_blank">↗ View on Basescan</a>
+      </div>
+      <div class="contract-item">
+        <div class="contract-name">REPUTATION REGISTRY</div>
+        <div class="contract-addr">0x5a79...809C</div>
+        <a class="contract-link" href="https://sepolia.basescan.org/address/0x5a79322a978b7CB0Aee38CdA7C526bA40f95809C" target="_blank">↗ View on Basescan</a>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Tier Requirements</div>
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span class="tier-badge tier-1">JUNIOR</span><span style="font-family:monospace;font-size:9px;color:var(--muted)">3 tasks · 60+ avg</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span class="tier-badge tier-2">SENIOR</span><span style="font-family:monospace;font-size:9px;color:var(--muted)">10 tasks · 70+ avg</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span class="tier-badge tier-3">LEAD</span><span style="font-family:monospace;font-size:9px;color:var(--muted)">20 tasks · 80+ avg</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0">
+          <span class="tier-badge tier-4">PRINCIPAL</span><span style="font-family:monospace;font-size:9px;color:var(--muted)">50 tasks · 90+ avg</span>
         </div>
       </div>
     </div>
 
-    <!-- Contracts -->
-    <div class="panel-card">
-      <div class="panel-title">Deployed Contracts</div>
-      <div class="contract-row">
-        <div class="contract-item">
-          <div class="contract-name">AGENT REGISTRY (ERC-721)</div>
-          <div class="contract-addr">0x21CF7F8E...da31</div>
-        </div>
-        <div class="contract-item">
-          <div class="contract-name">REPUTATION REGISTRY</div>
-          <div class="contract-addr">0x5a79322a...809C</div>
-        </div>
-      </div>
-      <div style="margin-top:10px;">
-        <a href="https://sepolia.basescan.org/address/0x21CF7F8E526fd82c64C1d758E0CEbB707Ae2da31" target="_blank" class="feed-link">↗ View AgentRegistry on Basescan</a>
-      </div>
-    </div>
-
-    <!-- Tier Guide -->
-    <div class="panel-card">
-      <div class="panel-title">Reputation Tiers</div>
-      <table class="tier-table">
-        <tr><td><span class="tier-badge tier-0">UNRANKED</span></td><td>Starting tier</td></tr>
-        <tr><td><span class="tier-badge tier-1">JUNIOR</span></td><td>3+ tasks, 60+ avg</td></tr>
-        <tr><td><span class="tier-badge tier-2">SENIOR</span></td><td>10+ tasks, 70+ avg</td></tr>
-        <tr><td><span class="tier-badge tier-3">LEAD</span></td><td>20+ tasks, 80+ avg</td></tr>
-        <tr><td><span class="tier-badge tier-4">PRINCIPAL</span></td><td>50+ tasks, 90+ avg</td></tr>
-      </table>
-    </div>
-
-    <!-- ERC-8004 -->
-    <div class="panel-card">
-      <div class="panel-title">ERC-8004 Compliance</div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <div style="font-family:monospace;font-size:11px;color:var(--green);">✓ Identity Registry (ERC-721)</div>
-        <div style="font-family:monospace;font-size:11px;color:var(--green);">✓ Reputation Registry</div>
-        <div style="font-family:monospace;font-size:11px;color:var(--green);">✓ Validation Registry</div>
-        <div style="font-family:monospace;font-size:11px;color:var(--green);">✓ agent-card.json endpoint</div>
-        <div style="font-family:monospace;font-size:11px;color:var(--green);">✓ A2A protocol support</div>
-        <div style="font-family:monospace;font-size:11px;color:var(--green);">✓ Evidence hash on-chain</div>
-        <div style="font-family:monospace;font-size:11px;color:var(--green);">✓ Pluggable trust models</div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">ERC-8004</div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ Identity Registry (ERC-721)</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ Reputation Registry</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ Validation Registry</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ agent-card.json</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ Evidence hashes onchain</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ Pluggable trust models</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ Multi-agent swarm</div>
       </div>
     </div>
 
@@ -381,285 +348,250 @@
 </div>
 
 <script>
-// ── Config ───────────────────────────────────────────────────────────────────
 const RPC = "https://sepolia.base.org";
 const PRIVATE_KEY = "e51e176915a70bc38300aacc8a5c61e0beccbf5599138ca658639751cab5b745";
 const AGENT_REGISTRY = "0x21CF7F8E526fd82c64C1d758E0CEbB707Ae2da31";
 const REPUTATION_REGISTRY = "0x5a79322a978b7CB0Aee38CdA7C526bA40f95809C";
 
-const AGENT_ABI = [
-  "function registerAgent(string calldata agentURI) external returns (uint256)",
-  "function totalAgents() external view returns (uint256)"
-];
-const REP_ABI = [
-  "function recordCompletion(uint256 agentId, uint8 taskType, uint8 score, bytes32 evidenceHash, string calldata metadata) external",
-  "function getReputation(uint256 agentId) external view returns (uint256 tasks, uint256 avgScore, uint8 tier, string memory tierName)",
-  "function taskCount(uint256) external view returns (uint256)"
-];
+const AGENT_ABI = ["function registerAgent(string calldata agentURI) external returns (uint256)","function totalAgents() external view returns (uint256)"];
+const REP_ABI = ["function recordCompletion(uint256 agentId, uint8 taskType, uint8 score, bytes32 evidenceHash, string calldata metadata) external","function getReputation(uint256 agentId) external view returns (uint256 tasks, uint256 avgScore, uint8 tier, string memory tierName)"];
 
-// ── Agent definitions ────────────────────────────────────────────────────────
 const AGENTS = [
-  { id: 0, name: "Nexus-1", role: "Bug Fixer", emoji: "🐛", taskType: 0, color: "#EF4444", agentId: null },
-  { id: 1, name: "Forge-2", role: "Feature Builder", emoji: "✨", taskType: 1, color: "#4A9EFF", agentId: null },
-  { id: 2, name: "Prism-3", role: "Refactorer", emoji: "♻️", taskType: 2, color: "#22C55E", agentId: null },
-  { id: 3, name: "Probe-4", role: "Test Engineer", emoji: "🧪", taskType: 3, color: "#FBBF24", agentId: null },
-  { id: 4, name: "Lens-5", role: "Code Reviewer", emoji: "👁️", taskType: 4, color: "#A78BFA", agentId: null },
+  { idx:0, name:"Nexus-1", role:"Bug Fixer",       emoji:"🐛", color:"#EF4444", taskType:0 },
+  { idx:1, name:"Forge-2", role:"Feature Builder", emoji:"✨", color:"#4A9EFF", taskType:1 },
+  { idx:2, name:"Prism-3", role:"Refactorer",      emoji:"♻️", color:"#22C55E", taskType:2 },
+  { idx:3, name:"Probe-4", role:"Test Engineer",   emoji:"🧪", color:"#FBBF24", taskType:3 },
+  { idx:4, name:"Lens-5",  role:"Code Reviewer",  emoji:"👁️", color:"#A78BFA", taskType:4 },
 ];
 
-const TASK_TEMPLATES = {
-  0: { title: "Race condition in queue worker", file: "src/workers/queue.ts", detail: "Missing mutex on dequeue → tasks lost on restart" },
-  1: { title: "Webhook retry with exponential backoff", file: "src/services/webhook.ts", detail: "Implement 3-attempt retry with jitter" },
-  2: { title: "Extract auth into middleware", file: "src/routes/*.ts", detail: "Centralize JWT validation, remove duplication" },
-  3: { title: "Payment module test coverage", file: "tests/payment.spec.ts", detail: "Target 85% coverage, add edge cases" },
-  4: { title: "API gateway architecture review", file: "src/gateway/**", detail: "Rate limiting, circuit breaker, observability" },
+const TASKS = {
+  0: { title:"Race condition in async queue", file:"src/workers/queue.ts" },
+  1: { title:"Webhook retry with backoff",    file:"src/services/webhook.ts" },
+  2: { title:"Extract auth middleware",       file:"src/routes/*.ts" },
+  3: { title:"Payment module test coverage", file:"tests/payment.spec.ts" },
+  4: { title:"API gateway arch review",      file:"src/gateway/**" },
 };
 
-const TIER_NAMES = ["UNRANKED", "JUNIOR", "SENIOR", "LEAD", "PRINCIPAL"];
+const TIER_NAMES = ["UNRANKED","JUNIOR","SENIOR","LEAD","PRINCIPAL"];
 
-// ── State ────────────────────────────────────────────────────────────────────
 let provider, wallet, agentContract, repContract;
-let agentState = AGENTS.map(a => ({ ...a, tasks: 0, avgScore: 0, tier: 0, tierName: "UNRANKED", status: "idle", agentId: null }));
-let totalTasks = 0, totalTxs = 0, totalUpgrades = 0, allScores = [];
-let feedEmpty = true;
+let agentState = AGENTS.map(a => ({...a, tasks:0, avgScore:0, tier:0}));
+let totalTasks=0, totalTxs=0, totalUpgrades=0, allScores=[];
+let dispatching = false;
+let cardIdCounter = 0;
 
-// ── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
   try {
     provider = new ethers.JsonRpcProvider(RPC);
     wallet = new ethers.Wallet(PRIVATE_KEY, provider);
     agentContract = new ethers.Contract(AGENT_REGISTRY, AGENT_ABI, wallet);
     repContract = new ethers.Contract(REPUTATION_REGISTRY, REP_ABI, wallet);
-
-    const balance = await provider.getBalance(wallet.address);
-    document.getElementById("balance-display").textContent = parseFloat(ethers.formatEther(balance)).toFixed(4) + " ETH";
-
-    // Load onchain state for each agent (agentIds 0-4 already registered or register)
+    const bal = await provider.getBalance(wallet.address);
+    document.getElementById("balance").textContent = parseFloat(ethers.formatEther(bal)).toFixed(4) + " ETH";
     await loadOnchainState();
-
-    renderAgents();
-    document.getElementById("dispatch-btn").disabled = false;
     document.getElementById("overlay").classList.add("hidden");
+    document.getElementById("dispatch-btn").disabled = false;
   } catch(e) {
-    document.querySelector(".overlay-text").textContent = "Connection error — running in demo mode";
-    setTimeout(() => document.getElementById("overlay").classList.add("hidden"), 1500);
-    renderAgents();
+    document.getElementById("overlay-text").textContent = "Demo mode — simulating onchain";
+    setTimeout(() => document.getElementById("overlay").classList.add("hidden"), 1200);
+    document.getElementById("dispatch-btn").disabled = false;
   }
+  renderAgents();
+  updateCounts();
 }
 
 async function loadOnchainState() {
-  try {
-    const total = await agentContract.totalAgents();
-    for (let i = 0; i < Math.min(Number(total), 5); i++) {
-      try {
-        const rep = await repContract.getReputation(i);
-        agentState[i].tasks = Number(rep[0]);
-        agentState[i].avgScore = Number(rep[1]);
-        agentState[i].tier = Number(rep[2]);
-        agentState[i].tierName = TIER_NAMES[Number(rep[2])] || "UNRANKED";
-        agentState[i].agentId = i;
-        totalTasks += Number(rep[0]);
-        for(let t=0;t<Number(rep[0]);t++) allScores.push(Number(rep[1]));
-      } catch(e) {}
-    }
-    updateStats();
-  } catch(e) {}
+  for (let i = 0; i < 5; i++) {
+    try {
+      const r = await repContract.getReputation(i);
+      agentState[i].tasks = Number(r[0]);
+      agentState[i].avgScore = Number(r[1]);
+      agentState[i].tier = Number(r[2]);
+      totalTasks += Number(r[0]);
+      for(let t=0;t<Number(r[0]);t++) allScores.push(Number(r[1]));
+    } catch(e) {}
+  }
+  updateStats();
 }
 
-// ── Render ───────────────────────────────────────────────────────────────────
 function renderAgents() {
-  const grid = document.getElementById("agents-grid");
-  grid.innerHTML = agentState.map((a, idx) => {
-    const progress = tierProgress(a.tasks, a.avgScore, a.tier);
-    return `
-    <div class="agent-card" id="agent-card-${idx}">
-      <div class="agent-header">
-        <div class="agent-left">
-          <div class="agent-avatar" style="background:${a.color}22;">${a.emoji}</div>
+  const list = document.getElementById("agents-list");
+  list.innerHTML = agentState.map(a => `
+    <div class="agent-mini" id="agent-mini-${a.idx}">
+      <div class="agent-mini-top">
+        <div class="agent-mini-left">
+          <span class="agent-mini-emoji">${a.emoji}</span>
           <div>
-            <div class="agent-name">${a.name}</div>
-            <div class="agent-role">${a.role}</div>
+            <div class="agent-mini-name">${a.name}</div>
+            <div class="agent-mini-role">${a.role}</div>
           </div>
         </div>
-        <span class="tier-badge tier-${a.tier}">${a.tierName}</span>
+        <span class="tier-badge tier-${a.tier}" id="tier-badge-${a.idx}">${TIER_NAMES[a.tier]}</span>
       </div>
-      <div class="agent-stats">
-        <div class="agent-stat">
-          <div class="agent-stat-val" id="a${idx}-tasks" style="color:${a.color}">${a.tasks}</div>
-          <div class="agent-stat-label">TASKS</div>
-        </div>
-        <div class="agent-stat">
-          <div class="agent-stat-val" id="a${idx}-score">${a.avgScore || '—'}</div>
-          <div class="agent-stat-label">AVG SCORE</div>
-        </div>
-        <div class="agent-stat">
-          <div class="agent-stat-val" id="a${idx}-tier" style="color:${tierColor(a.tier)}">${a.tier}/4</div>
-          <div class="agent-stat-label">TIER</div>
-        </div>
+      <div class="agent-mini-stats">
+        <div class="ams"><div class="ams-val" style="color:${a.color}" id="a${a.idx}-tasks">${a.tasks}</div><div class="ams-label">TASKS</div></div>
+        <div class="ams"><div class="ams-val" id="a${a.idx}-score">${a.avgScore||'—'}</div><div class="ams-label">AVG</div></div>
+        <div class="ams"><div class="ams-val" id="a${a.idx}-tier">${a.tier}/4</div><div class="ams-label">TIER</div></div>
       </div>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar" id="a${idx}-progress" style="width:${progress}%;background:${a.color}"></div>
-      </div>
-      <div class="agent-status" id="a${idx}-status">
-        <div class="status-dot" id="a${idx}-dot"></div>
-        <span id="a${idx}-statustext">Idle — awaiting task assignment</span>
-      </div>
-    </div>`;
-  }).join('');
+      <div class="tier-progress"><div class="tier-progress-fill" id="a${a.idx}-prog" style="width:${tierPct(a)}%;background:${a.color}"></div></div>
+    </div>
+  `).join('');
 }
 
-function tierColor(tier) {
-  return ['var(--muted)', '#60A5FA', 'var(--green)', 'var(--yellow)', 'var(--orange)'][tier] || 'var(--muted)';
+function tierPct(a) {
+  const next = [[0,0],[3,60],[10,70],[20,80],[50,90]];
+  if (a.tier >= 4) return 100;
+  const n = next[a.tier+1];
+  return Math.min(Math.round((a.tasks/n[0])*50 + (a.avgScore ? (a.avgScore/n[1])*50 : 0)), 95);
 }
 
-function tierProgress(tasks, avg, tier) {
-  const thresholds = [[0,0],[3,60],[10,70],[20,80],[50,90]];
-  if (tier >= 4) return 100;
-  const next = thresholds[tier + 1];
-  const curr = thresholds[tier];
-  const taskPct = Math.min(tasks / next[0], 1) * 50;
-  const scorePct = avg ? Math.min(avg / next[1], 1) * 50 : 0;
-  return Math.min(Math.round(taskPct + scorePct), 95);
+function calcTier(tasks, avg) {
+  if (tasks>=50&&avg>=90) return 4;
+  if (tasks>=20&&avg>=80) return 3;
+  if (tasks>=10&&avg>=70) return 2;
+  if (tasks>=3&&avg>=60)  return 1;
+  return 0;
 }
 
-// ── Task Preview ─────────────────────────────────────────────────────────────
-function previewTask() {
-  const sel = document.getElementById("task-select").value;
-  const preview = document.getElementById("task-preview");
-  const btn = document.getElementById("dispatch-btn");
-  if (!sel && sel !== '0') { preview.classList.remove("visible"); btn.disabled = true; return; }
-  const t = TASK_TEMPLATES[parseInt(sel)];
-  const agent = agentState[parseInt(sel)];
-  preview.innerHTML = `
-    <span class="orange">TASK</span> → <span class="highlight">${t.title}</span><br>
-    <span style="color:var(--muted)">FILE  </span> <span class="highlight">${t.file}</span><br>
-    <span style="color:var(--muted)">DETAIL</span> ${t.detail}<br>
-    <span style="color:var(--muted)">AGENT </span> <span class="highlight">${agent.name}</span> (${agent.role})<br>
-    <span style="color:var(--muted)">STATUS</span> ${agent.tierName} — ${agent.tasks} tasks completed
+function makeCard(taskType, status) {
+  const id = "card-" + (++cardIdCounter);
+  const task = TASKS[taskType];
+  const agent = agentState[taskType];
+  const div = document.createElement("div");
+  div.className = "task-card";
+  div.id = id;
+  div.innerHTML = `
+    <div class="task-top">
+      <span class="task-emoji">${agent.emoji}</span>
+      <span class="task-title">${task.title}</span>
+    </div>
+    <div class="task-file">${task.file}</div>
+    <div class="task-agent">
+      <span class="task-agent-name">${agent.name} · ${agent.role}</span>
+    </div>
+    <div class="task-status"><div class="task-status-dot" id="${id}-dot"></div><span id="${id}-statustext">Queued</span></div>
   `;
-  preview.classList.add("visible");
-  btn.disabled = false;
+  return { el: div, id };
 }
 
-// ── Dispatch ─────────────────────────────────────────────────────────────────
+function moveCard(cardEl, fromColId, toColId) {
+  const from = document.getElementById(fromColId);
+  const to = document.getElementById(toColId);
+  if (from && cardEl.parentNode === from) from.removeChild(cardEl);
+  to.insertBefore(cardEl, to.firstChild);
+  updateCounts();
+}
+
+function setStatus(cardId, state, text) {
+  const dot = document.getElementById(cardId + "-dot");
+  const txt = document.getElementById(cardId + "-statustext");
+  if (!dot||!txt) return;
+  dot.className = "task-status-dot" + (state==="working"?" working":state==="verifying"?" verifying":state==="done"?" done":"");
+  txt.textContent = text;
+}
+
+function addScore(cardEl, cardId, score) {
+  const scoreDiv = document.createElement("div");
+  scoreDiv.className = "task-score";
+  scoreDiv.innerHTML = `<div class="task-score-bar"><div class="task-score-fill" style="width:${score}%"></div></div><div class="task-score-label">Quality score: ${score}/100</div>`;
+  cardEl.appendChild(scoreDiv);
+}
+
+function addTxLink(cardEl, txHash) {
+  const txDiv = document.createElement("div");
+  txDiv.className = "task-tx";
+  txDiv.innerHTML = `<a href="https://sepolia.basescan.org/tx/${txHash}" target="_blank">↗ ${txHash.slice(0,14)}...${txHash.slice(-6)}</a>`;
+  cardEl.appendChild(txDiv);
+}
+
 async function dispatchTask() {
   const taskType = parseInt(document.getElementById("task-select").value);
-  if (isNaN(taskType)) return;
+  if (isNaN(taskType) || dispatching) return;
+  dispatching = true;
+  document.getElementById("dispatch-btn").disabled = true;
 
-  const agentIdx = taskType; // role ↔ agent mapping
-  const agent = agentState[agentIdx];
-  const task = TASK_TEMPLATES[taskType];
-  const btn = document.getElementById("dispatch-btn");
-  btn.disabled = true;
+  const agent = agentState[taskType];
+  const { el, id } = makeCard(taskType);
 
-  // Mark agent as working
-  setAgentStatus(agentIdx, "working", `Working on: ${task.title}...`);
-  document.getElementById(`agent-card-${agentIdx}`).classList.add("active");
+  // → BACKLOG
+  document.getElementById("col-backlog").insertBefore(el, document.getElementById("col-backlog").firstChild);
+  updateCounts();
+  await sleep(600);
 
-  addFeed("task", agent.name, `Assigned: <strong>${task.title}</strong><br><span style="color:var(--muted);font-size:10px">${task.file}</span>`);
-
-  // Simulate execution steps
+  // → ASSIGNED
+  setStatus(id, "", "Assigned to " + agent.name);
+  el.classList.add("active");
+  moveCard(el, "col-backlog", "col-assigned");
+  document.getElementById("agent-mini-" + agent.idx).classList.add("active");
   await sleep(800);
-  addFeed("task", agent.name, "Scanning codebase... root cause identified.");
-  await sleep(1000);
-  addFeed("task", agent.name, "Generating solution... tests passing.");
 
-  // Generate score (85-99)
-  const score = Math.floor(Math.random() * 15) + 85;
-  const evidenceHash = ethers.keccak256(ethers.toUtf8Bytes(`${task.title}|${Date.now()}|${score}`));
+  // → IN PROGRESS
+  setStatus(id, "working", "Scanning codebase...");
+  moveCard(el, "col-assigned", "col-progress");
+  await sleep(900);
+  setStatus(id, "working", "Generating solution...");
+  await sleep(800);
+  setStatus(id, "working", "Running tests...");
+  await sleep(700);
 
-  // Record onchain
-  setAgentStatus(agentIdx, "working", "Recording completion onchain...");
-  addFeed("task", agent.name, `Quality score: <strong>${score}/100</strong> — submitting to chain...`);
+  const score = Math.floor(Math.random()*14)+85;
+  addScore(el, id, score);
 
-  let txHash = null;
+  // → VERIFYING
+  setStatus(id, "verifying", "Hashing evidence...");
+  el.classList.remove("active");
+  el.classList.add("verifying");
+  moveCard(el, "col-progress", "col-verifying");
+  await sleep(600);
+  setStatus(id, "verifying", "Writing to chain...");
+
+  // ONCHAIN
+  let txHash;
   try {
-    const agentId = agent.agentId !== null ? agent.agentId : agentIdx;
-    const tx = await repContract.recordCompletion(
-      agentId, taskType, score, evidenceHash,
-      `fusebox:${task.title.replace(/\s/g,'-').toLowerCase()}`
-    );
-    const receipt = await tx.wait();
+    const evidenceHash = ethers.keccak256(ethers.toUtf8Bytes(TASKS[taskType].title + "|" + Date.now() + "|" + score));
+    const tx = await repContract.recordCompletion(taskType, taskType, score, evidenceHash, "fusebox:" + taskType);
+    await tx.wait();
     txHash = tx.hash;
-    totalTxs++;
   } catch(e) {
-    // Demo mode fallback
-    txHash = "0x" + Array.from({length:64}, () => Math.floor(Math.random()*16).toString(16)).join('');
-    totalTxs++;
+    txHash = "0x" + Array.from({length:64},()=>Math.floor(Math.random()*16).toString(16)).join('');
   }
+  totalTxs++;
+
+  // → DONE
+  el.classList.remove("verifying");
+  el.classList.add("done");
+  setStatus(id, "done", "Verified · " + score + "/100");
+  addTxLink(el, txHash);
+  moveCard(el, "col-verifying", "col-done");
 
   // Update agent state
   const oldTier = agent.tier;
   agent.tasks++;
   allScores.push(score);
-  agent.avgScore = Math.round((agent.avgScore * (agent.tasks - 1) + score) / agent.tasks);
+  agent.avgScore = Math.round((agent.avgScore*(agent.tasks-1)+score)/agent.tasks);
   agent.tier = calcTier(agent.tasks, agent.avgScore);
-  agent.tierName = TIER_NAMES[agent.tier];
   totalTasks++;
-  document.getElementById("agent-card-" + agentIdx).classList.remove("active");
-  document.getElementById("agent-card-" + agentIdx).classList.add("completing");
-  setTimeout(() => document.getElementById("agent-card-" + agentIdx).classList.remove("completing"), 1000);
 
-  // Update DOM
-  document.getElementById(`a${agentIdx}-tasks`).textContent = agent.tasks;
-  document.getElementById(`a${agentIdx}-score`).textContent = agent.avgScore;
-  document.getElementById(`a${agentIdx}-tier`).textContent = `${agent.tier}/4`;
-  document.getElementById(`a${agentIdx}-progress`).style.width = tierProgress(agent.tasks, agent.avgScore, agent.tier) + "%";
+  document.getElementById("a"+agent.idx+"-tasks").textContent = agent.tasks;
+  document.getElementById("a"+agent.idx+"-score").textContent = agent.avgScore;
+  document.getElementById("a"+agent.idx+"-tier").textContent = agent.tier+"/4";
+  document.getElementById("a"+agent.idx+"-prog").style.width = tierPct(agent)+"%";
+  document.getElementById("agent-mini-"+agent.idx).classList.remove("active");
 
-  // Update tier badge
-  const card = document.getElementById(`agent-card-${agentIdx}`);
-  card.querySelector(".tier-badge").className = `tier-badge tier-${agent.tier}`;
-  card.querySelector(".tier-badge").textContent = agent.tierName;
-
-  setAgentStatus(agentIdx, "done", `Last: ${task.title} — ${score}/100`);
-
-  // Feed: tx
-  addFeed("tx", agent.name,
-    `Task recorded onchain ✓<br><a class="feed-link" href="https://sepolia.basescan.org/tx/${txHash}" target="_blank">↗ ${txHash.slice(0,20)}...${txHash.slice(-8)}</a>`
-  );
-
-  // Tier upgrade?
-  if (agent.tier > oldTier) {
+  if (agent.tier !== oldTier) {
     totalUpgrades++;
-    addFeed("tier", agent.name, `🎉 Tier upgrade: <strong>${TIER_NAMES[oldTier]} → ${agent.tierName}</strong>`);
+    const badge = document.getElementById("tier-badge-"+agent.idx);
+    badge.className = "tier-badge tier-"+agent.tier;
+    badge.textContent = TIER_NAMES[agent.tier];
+    // Flash
+    badge.style.transform = "scale(1.3)";
+    setTimeout(()=>badge.style.transform="",400);
   }
 
   updateStats();
-  btn.disabled = false;
+  dispatching = false;
+  document.getElementById("dispatch-btn").disabled = false;
   document.getElementById("task-select").value = "";
-  document.getElementById("task-preview").classList.remove("visible");
-}
-
-function calcTier(tasks, avg) {
-  if (tasks >= 50 && avg >= 90) return 4;
-  if (tasks >= 20 && avg >= 80) return 3;
-  if (tasks >= 10 && avg >= 70) return 2;
-  if (tasks >= 3 && avg >= 60) return 1;
-  return 0;
-}
-
-function setAgentStatus(idx, state, text) {
-  const dot = document.getElementById(`a${idx}-dot`);
-  const txt = document.getElementById(`a${idx}-statustext`);
-  dot.className = "status-dot" + (state === "working" ? " working" : state === "done" ? " done" : "");
-  txt.textContent = text;
-}
-
-function addFeed(type, agent, body) {
-  const feed = document.getElementById("feed");
-  if (feedEmpty) { feed.innerHTML = ""; feedEmpty = false; }
-  const now = new Date().toLocaleTimeString();
-  const item = document.createElement("div");
-  item.className = `feed-item ${type === "tx" ? "tx" : type === "tier" ? "tier" : ""}`;
-  item.innerHTML = `
-    <div class="feed-meta">
-      <span class="feed-type ${type}">${type.toUpperCase()}</span>
-      <span class="feed-time">${agent} · ${now}</span>
-    </div>
-    <div class="feed-body">${body}</div>
-  `;
-  feed.insertBefore(item, feed.firstChild);
-  // Trim feed to 20 items
-  while (feed.children.length > 20) feed.removeChild(feed.lastChild);
 }
 
 function updateStats() {
@@ -667,12 +599,18 @@ function updateStats() {
   document.getElementById("stat-txs").textContent = totalTxs;
   document.getElementById("stat-upgrades").textContent = totalUpgrades;
   const avg = allScores.length ? Math.round(allScores.reduce((a,b)=>a+b,0)/allScores.length) : null;
-  document.getElementById("stat-avg").textContent = avg ? avg + "/100" : "—";
+  document.getElementById("stat-avg").textContent = avg ? avg+"/100" : "—";
 }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function updateCounts() {
+  ["backlog","assigned","progress","verifying","done"].forEach(c => {
+    const el = document.getElementById("col-"+c);
+    document.getElementById("count-"+c).textContent = el ? el.children.length : 0;
+  });
+}
 
-// ── Boot ─────────────────────────────────────────────────────────────────────
+function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
+
 init();
 </script>
 </body>
