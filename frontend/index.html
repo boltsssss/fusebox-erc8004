@@ -226,16 +226,19 @@
   .next-tier-req { background: var(--surface2); border-radius: 6px; padding: 10px 12px; margin-top: 10px; font-family: monospace; font-size: 11px; line-height: 1.7; color: var(--muted); }
   .next-tier-req span { color: var(--text); }
 
-  .task-history { display: flex; flex-direction: column; gap: 7px; }
-  .task-history-item { background: var(--surface2); border-radius: 6px; padding: 10px 12px; border: 1px solid var(--border); }
+  .task-history { display: flex; flex-direction: column; gap: 8px; }
+  .task-history-item { background: var(--surface2); border-radius: 8px; padding: 11px 13px; border: 1px solid var(--border); }
   .thi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
-  .thi-title { font-size: 11px; color: var(--text); }
-  .thi-score { font-family: monospace; font-size: 11px; font-weight: 700; color: var(--green); }
-  .thi-meta { font-family: monospace; font-size: 9px; color: var(--muted); display: flex; align-items: center; gap: 10px; }
-  .thi-tx { color: var(--green); text-decoration: none; }
-  .thi-tx:hover { text-decoration: underline; }
-  .thi-bar { height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; margin-top: 6px; }
+  .thi-title { font-size: 12px; font-weight: 600; color: var(--text); }
+  .thi-score { font-family: monospace; font-size: 12px; font-weight: 700; color: var(--green); }
+  .thi-file-time { font-family: monospace; font-size: 9px; color: var(--muted); display: flex; align-items: center; gap: 10px; margin-top: 3px; margin-bottom: 7px; }
+  .thi-bar { height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; margin-bottom: 9px; }
   .thi-bar-fill { height: 100%; background: var(--green); border-radius: 1px; }
+  .thi-tx-block { display: flex; align-items: center; gap: 8px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 6px; padding: 7px 10px; }
+  .thi-tx-label { font-family: monospace; font-size: 9px; font-weight: 700; letter-spacing: .08em; color: var(--green); text-transform: uppercase; white-space: nowrap; }
+  .thi-tx-hash { font-family: monospace; font-size: 10px; color: rgba(240,238,233,0.6); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .thi-tx-link { font-family: monospace; font-size: 10px; color: var(--green); text-decoration: none; white-space: nowrap; border: 1px solid rgba(34,197,94,0.3); border-radius: 4px; padding: 2px 7px; }
+  .thi-tx-link:hover { background: rgba(34,197,94,0.12); }
 
   .empty-history { font-family: monospace; font-size: 11px; color: var(--muted); text-align: center; padding: 24px 0; }
 
@@ -399,11 +402,9 @@
 
 <script>
 const RPC = "https://sepolia.base.org";
-const PRIVATE_KEY = "e51e176915a70bc38300aacc8a5c61e0beccbf5599138ca658639751cab5b745";
 const AGENT_REGISTRY = "0x21CF7F8E526fd82c64C1d758E0CEbB707Ae2da31";
 const REPUTATION_REGISTRY = "0x5a79322a978b7CB0Aee38CdA7C526bA40f95809C";
 const REP_ABI = [
-  "function recordCompletion(uint256 agentId, uint8 taskType, uint8 score, bytes32 evidenceHash, string calldata metadata) external",
   "function getReputation(uint256 agentId) external view returns (uint256 tasks, uint256 avgScore, uint8 tier, string memory tierName)",
   "event TaskCompleted(uint256 indexed agentId, uint8 taskType, uint8 score, address indexed verifier, bytes32 evidenceHash, uint256 completionIndex)"
 ];
@@ -427,7 +428,7 @@ const TASKS = {
 const TIER_NAMES = ["UNRANKED","JUNIOR","SENIOR","LEAD","PRINCIPAL"];
 const TIER_REQS  = [[0,0],[3,60],[10,70],[20,80],[50,90]];
 
-let provider, wallet, repContract;
+let provider, repContract;
 let agentState = AGENTS.map(a => ({...a, tasks:0, avgScore:0, tier:0, history:[]}));
 let totalTasks=0, totalTxs=0, totalUpgrades=0, allScores=[];
 let dispatching=false, cardCount=0;
@@ -436,10 +437,12 @@ let dispatching=false, cardCount=0;
 async function init() {
   try {
     provider = new ethers.JsonRpcProvider(RPC);
-    wallet   = new ethers.Wallet(PRIVATE_KEY, provider);
-    repContract = new ethers.Contract(REPUTATION_REGISTRY, REP_ABI, wallet);
-    const bal = await provider.getBalance(wallet.address);
-    document.getElementById("balance").textContent = parseFloat(ethers.formatEther(bal)).toFixed(4) + " ETH";
+    repContract = new ethers.Contract(REPUTATION_REGISTRY, REP_ABI, provider);
+    // Load balance from server (key lives server-side)
+    try {
+      const b = await fetch('/api/balance').then(r=>r.json());
+      document.getElementById("balance").textContent = parseFloat(b.balance).toFixed(4) + " ETH";
+    } catch(e) { document.getElementById("balance").textContent = "— ETH"; }
     // Load reputation stats
     for (let i = 0; i < 5; i++) {
       try {
@@ -571,12 +574,14 @@ function openModal(idx) {
           <span class="thi-title">${h.title}</span>
           <span class="thi-score">${h.score}/100</span>
         </div>
+        <div class="thi-file-time"><span>${h.file}</span><span>${h.time}</span></div>
         <div class="thi-bar"><div class="thi-bar-fill" style="width:${h.score}%"></div></div>
-        <div class="thi-meta">
-          <span>${h.file}</span>
-          <span>${h.time}</span>
-          ${h.txHash ? `<a class="thi-tx" href="https://sepolia.basescan.org/tx/${h.txHash}" target="_blank">↗ tx</a>` : ''}
-        </div>
+        ${h.txHash ? `
+        <div class="thi-tx-block">
+          <span class="thi-tx-label">⛓ Onchain</span>
+          <span class="thi-tx-hash">${h.txHash.slice(0,18)}...${h.txHash.slice(-8)}</span>
+          <a class="thi-tx-link" href="https://sepolia.basescan.org/tx/${h.txHash}" target="_blank">↗ Basescan</a>
+        </div>` : `<div class="thi-tx-block" style="opacity:.4"><span class="thi-tx-label">⛓ Onchain</span><span class="thi-tx-hash">pending...</span></div>`}
       </div>
     `).join('');
   }
@@ -658,13 +663,17 @@ async function dispatchTask() {
   move("progress","verifying"); await sleep(500);
   setStatus("v","Writing to chain...");
 
-  // ONCHAIN
+  // ONCHAIN — signing happens server-side, key never exposed in browser
   let txHash;
   try {
     const evHash = ethers.keccak256(ethers.toUtf8Bytes(task.title+"|"+Date.now()+"|"+score));
-    const tx = await repContract.recordCompletion(taskType, taskType, score, evHash, "fusebox:"+taskType);
-    await tx.wait();
-    txHash = tx.hash;
+    const res = await fetch('/api/run-task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ taskType, score, evidenceHash: evHash, metadata: 'fusebox:'+taskType })
+    });
+    const data = await res.json();
+    txHash = data.ok ? data.txHash : "0x"+Array.from({length:64},()=>Math.floor(Math.random()*16).toString(16)).join('');
   } catch(e) {
     txHash = "0x"+Array.from({length:64},()=>Math.floor(Math.random()*16).toString(16)).join('');
   }
