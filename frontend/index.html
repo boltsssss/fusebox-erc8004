@@ -269,7 +269,7 @@
       <!-- DONE -->
       <div class="col">
         <div class="col-header">
-          <span class="col-title" style="color:var(--green)">Done ✓</span>
+          <span class="col-title" style="color:var(--green)">Done</span>
           <span class="col-count" id="count-done">0</span>
         </div>
         <div class="col-body" id="col-done"></div>
@@ -281,11 +281,11 @@
       <span class="dispatch-label">+ New Task</span>
       <select id="task-select">
         <option value="">— Select task to dispatch —</option>
-        <option value="0">🐛  Bug Fix — Race condition in async queue</option>
-        <option value="1">✨  Feature — Webhook retry with backoff</option>
-        <option value="2">♻️  Refactor — Extract auth middleware</option>
-        <option value="3">🧪  Test — Payment module coverage</option>
-        <option value="4">👁️  Review — API gateway architecture</option>
+        <option value="0">Bug Fix — Race condition in async queue</option>
+        <option value="1">Feature — Webhook retry with backoff</option>
+        <option value="2">Refactor — Extract auth middleware</option>
+        <option value="3">Test — Payment module coverage</option>
+        <option value="4">Review — API gateway architecture</option>
       </select>
       <button class="btn" id="dispatch-btn" onclick="dispatchTask()" disabled>DISPATCH →</button>
     </div>
@@ -334,13 +334,13 @@
     <div class="sidebar-section">
       <div class="sidebar-title">ERC-8004</div>
       <div style="display:flex;flex-direction:column;gap:4px;">
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ Identity Registry (ERC-721)</div>
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ Reputation Registry</div>
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ Validation Registry</div>
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ agent-card.json</div>
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ Evidence hashes onchain</div>
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ Pluggable trust models</div>
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">✓ Multi-agent swarm</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">• Identity Registry (ERC-721)</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">• Reputation Registry</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">• Validation Registry</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">• agent-card.json</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">• Evidence hashes onchain</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">• Pluggable trust models</div>
+        <div style="font-family:monospace;font-size:10px;color:var(--green)">• Multi-agent swarm</div>
       </div>
     </div>
 
@@ -357,11 +357,11 @@ const AGENT_ABI = ["function registerAgent(string calldata agentURI) external re
 const REP_ABI = ["function recordCompletion(uint256 agentId, uint8 taskType, uint8 score, bytes32 evidenceHash, string calldata metadata) external","function getReputation(uint256 agentId) external view returns (uint256 tasks, uint256 avgScore, uint8 tier, string memory tierName)"];
 
 const AGENTS = [
-  { idx:0, name:"Nexus-1", role:"Bug Fixer",       emoji:"🐛", color:"#EF4444", taskType:0 },
-  { idx:1, name:"Forge-2", role:"Feature Builder", emoji:"✨", color:"#4A9EFF", taskType:1 },
-  { idx:2, name:"Prism-3", role:"Refactorer",      emoji:"♻️", color:"#22C55E", taskType:2 },
-  { idx:3, name:"Probe-4", role:"Test Engineer",   emoji:"🧪", color:"#FBBF24", taskType:3 },
-  { idx:4, name:"Lens-5",  role:"Code Reviewer",  emoji:"👁️", color:"#A78BFA", taskType:4 },
+  { idx:0, name:"Nexus-1", role:"Bug Fixer",       emoji:"BUG", color:"#EF4444", taskType:0 },
+  { idx:1, name:"Forge-2", role:"Feature Builder", emoji:"FEAT", color:"#4A9EFF", taskType:1 },
+  { idx:2, name:"Prism-3", role:"Refactorer",      emoji:"REF", color:"#22C55E", taskType:2 },
+  { idx:3, name:"Probe-4", role:"Test Engineer",   emoji:"TEST", color:"#FBBF24", taskType:3 },
+  { idx:4, name:"Lens-5",  role:"Code Reviewer",  emoji:"REV", color:"#A78BFA", taskType:4 },
 ];
 
 const TASKS = {
@@ -420,7 +420,7 @@ function renderAgents() {
     <div class="agent-mini" id="agent-mini-${a.idx}">
       <div class="agent-mini-top">
         <div class="agent-mini-left">
-          <span class="agent-mini-emoji">${a.emoji}</span>
+          <span style="font-family:monospace;font-size:9px;font-weight:700;color:${a.color};background:${a.color}22;padding:3px 5px;border-radius:3px;">${a.emoji}</span>
           <div>
             <div class="agent-mini-name">${a.name}</div>
             <div class="agent-mini-role">${a.role}</div>
@@ -462,7 +462,7 @@ function makeCard(taskType, status) {
   div.id = id;
   div.innerHTML = `
     <div class="task-top">
-      <span class="task-emoji">${agent.emoji}</span>
+      <span style="font-family:monospace;font-size:9px;font-weight:700;color:${agent.color};background:${agent.color}22;padding:2px 5px;border-radius:3px;flex-shrink:0;margin-top:1px;">${agent.emoji}</span>
       <span class="task-title">${task.title}</span>
     </div>
     <div class="task-file">${task.file}</div>
