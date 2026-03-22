@@ -16,7 +16,7 @@
     --text: #F0EEE9;
     --muted: rgba(240,238,233,0.45);
     --border: rgba(240,238,233,0.07);
-    --border2: rgba(240,238,233,0.12);
+    --border2: rgba(240,238,233,0.13);
     --green: #22C55E;
     --blue: #4A9EFF;
     --yellow: #FBBF24;
@@ -26,185 +26,272 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-  /* HEADER */
+  /* ── HEADER ── */
   header {
-    flex-shrink: 0;
-    border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    flex-shrink: 0; border-bottom: 1px solid var(--border);
+    padding: 0 24px; height: 52px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
   }
-  .logo { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; display: flex; align-items: center; gap: 8px; }
+  .logo { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; letter-spacing: .08em; display: flex; align-items: center; gap: 8px; }
   .logo-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
 
-  .header-center { display: flex; align-items: center; gap: 8px; }
-  .stat-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-family: monospace; font-size: 11px; display: flex; align-items: center; gap: 6px; }
+  .stat-pills { display: flex; align-items: center; gap: 8px; }
+  .stat-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-family: monospace; font-size: 11px; display: flex; align-items: center; gap: 5px; }
   .stat-pill-val { color: var(--orange); font-weight: 700; }
   .stat-pill-label { color: var(--muted); }
 
   .header-right { display: flex; align-items: center; gap: 10px; }
   .network-badge { font-family: monospace; font-size: 10px; color: var(--green); background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); padding: 3px 9px; border-radius: 4px; display: flex; align-items: center; gap: 5px; }
-  .network-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+  .network-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
   .balance { font-family: monospace; font-size: 11px; color: var(--muted); }
-  .btn { background: var(--orange); color: #0f0e0b; border: none; cursor: pointer; font-family: monospace; font-size: 11px; font-weight: 700; padding: 7px 16px; border-radius: 5px; transition: opacity .2s; letter-spacing: .04em; white-space: nowrap; }
-  .btn:hover { opacity: .85; }
-  .btn:disabled { opacity: .35; cursor: not-allowed; }
 
-  /* BODY LAYOUT */
-  .body { flex: 1; display: grid; grid-template-columns: 1fr 260px; overflow: hidden; }
+  /* ── BODY LAYOUT ── */
+  .body { flex: 1; display: grid; grid-template-columns: 1fr 220px; overflow: hidden; }
 
-  /* KANBAN */
-  .kanban-wrap { overflow-x: auto; overflow-y: hidden; padding: 16px 20px; display: flex; align-items: flex-start; gap: 12px; }
+  /* ── KANBAN AREA ── */
+  .kanban-area { display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid var(--border); }
 
-  .col {
-    flex-shrink: 0;
-    width: 220px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 100%;
-  }
-  .col-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 10px;
-    border-radius: 7px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-  }
+  .kanban-wrap { flex: 1; overflow-x: auto; overflow-y: hidden; padding: 14px 16px 0; display: flex; align-items: flex-start; gap: 10px; }
+
+  .col { flex-shrink: 0; width: 210px; display: flex; flex-direction: column; gap: 7px; max-height: 100%; }
+  .col-header { display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; border-radius: 6px; background: var(--surface); border: 1px solid var(--border); }
   .col-title { font-family: monospace; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
   .col-count { font-family: monospace; font-size: 10px; color: var(--muted); background: var(--surface2); border-radius: 10px; padding: 1px 7px; }
-
-  .col-body { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; max-height: calc(100vh - 140px); padding-right: 2px; }
+  .col-body { display: flex; flex-direction: column; gap: 7px; overflow-y: auto; max-height: calc(100vh - 290px); padding-bottom: 8px; }
   .col-body::-webkit-scrollbar { width: 3px; }
   .col-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-  /* TASK CARD */
-  .task-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px;
-    cursor: default;
-    transition: border-color .2s, box-shadow .2s;
-    animation: cardIn .25s ease;
-  }
-  @keyframes cardIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .col-arrow { flex-shrink: 0; display: flex; align-items: flex-start; padding-top: 28px; color: var(--border2); font-size: 14px; padding-left: 2px; padding-right: 2px; }
+
+  /* ── TASK CARD ── */
+  .task-card { background: var(--surface); border: 1px solid var(--border); border-radius: 7px; padding: 11px; transition: border-color .2s; animation: cardIn .2s ease; }
+  @keyframes cardIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
+  .task-card.assigned { border-color: rgba(74,158,255,.35); }
   .task-card.active { border-color: var(--orange); }
-  .task-card.verifying { border-color: var(--blue); }
-  .task-card.done { border-color: rgba(34,197,94,0.35); }
+  .task-card.verifying { border-color: rgba(167,139,250,.4); }
+  .task-card.done { border-color: rgba(34,197,94,.35); }
 
-  .task-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; margin-bottom: 8px; }
-  .task-emoji { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-  .task-title { font-size: 11px; line-height: 1.45; color: var(--text); flex: 1; }
-  .task-file { font-family: monospace; font-size: 9px; color: var(--muted); margin-bottom: 8px; }
+  .tc-top { display: flex; align-items: flex-start; gap: 7px; margin-bottom: 7px; }
+  .tc-label { font-family: monospace; font-size: 9px; font-weight: 700; padding: 2px 5px; border-radius: 3px; flex-shrink: 0; margin-top: 1px; }
+  .tc-title { font-size: 11px; line-height: 1.4; color: var(--text); }
+  .tc-file { font-family: monospace; font-size: 9px; color: var(--muted); margin-bottom: 7px; }
+  .tc-agent { font-family: monospace; font-size: 10px; color: var(--muted); margin-bottom: 5px; }
+  .tc-status { display: flex; align-items: center; gap: 5px; font-family: monospace; font-size: 9px; color: var(--muted); }
+  .tc-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .tc-dot.w { background: var(--orange); animation: pulse .9s infinite; }
+  .tc-dot.v { background: var(--purple); animation: pulse .9s infinite; }
+  .tc-dot.d { background: var(--green); }
+  .tc-score { margin-top: 7px; }
+  .tc-score-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .tc-score-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .4s; }
+  .tc-score-label { font-family: monospace; font-size: 9px; color: var(--muted); margin-top: 3px; }
+  .tc-tx { margin-top: 5px; }
+  .tc-tx a { font-family: monospace; font-size: 9px; color: var(--green); text-decoration: none; }
+  .tc-tx a:hover { text-decoration: underline; }
 
-  .task-agent { display: flex; align-items: center; gap: 6px; }
-  .task-agent-emoji { font-size: 11px; }
-  .task-agent-name { font-family: monospace; font-size: 10px; color: var(--muted); }
-
-  .task-status { font-family: monospace; font-size: 9px; color: var(--muted); margin-top: 6px; display: flex; align-items: center; gap: 5px; }
-  .task-status-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
-  .task-status-dot.working { background: var(--orange); animation: pulse .9s infinite; }
-  .task-status-dot.verifying { background: var(--blue); animation: pulse .9s infinite; }
-  .task-status-dot.done { background: var(--green); }
-
-  .task-score { margin-top: 6px; }
-  .task-score-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
-  .task-score-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .5s ease; }
-  .task-score-label { font-family: monospace; font-size: 9px; color: var(--muted); margin-top: 3px; }
-
-  .task-tx { margin-top: 6px; }
-  .task-tx a { font-family: monospace; font-size: 9px; color: var(--green); text-decoration: none; }
-  .task-tx a:hover { text-decoration: underline; }
-
-  /* ARROW CONNECTORS */
-  .col-arrow { flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding-top: 32px; color: var(--border2); font-size: 16px; opacity: .6; }
-
-  /* DISPATCH BAR */
-  .dispatch-bar {
+  /* ── AGENT ROW ── */
+  .agent-row {
     flex-shrink: 0;
     border-top: 1px solid var(--border);
-    padding: 10px 20px;
+    padding: 10px 16px;
     display: flex;
-    align-items: center;
     gap: 10px;
     background: var(--surface);
   }
-  .dispatch-label { font-family: monospace; font-size: 10px; color: var(--muted); white-space: nowrap; letter-spacing: .08em; text-transform: uppercase; }
-  select { background: var(--surface2); border: 1px solid var(--border2); color: var(--text); padding: 7px 12px; border-radius: 5px; font-family: monospace; font-size: 11px; flex: 1; }
-  select:focus { outline: none; border-color: var(--orange); }
 
-  /* RIGHT SIDEBAR */
-  .sidebar { border-left: 1px solid var(--border); overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
-  .sidebar::-webkit-scrollbar { width: 3px; }
-  .sidebar::-webkit-scrollbar-thumb { background: var(--border); }
-
-  .sidebar-section { }
-  .sidebar-title { font-family: monospace; font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-  .sidebar-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-  /* AGENT MINI CARDS */
-  .agent-mini {
-    background: var(--surface);
+  .agent-card {
+    flex: 1;
+    background: var(--surface2);
     border: 1px solid var(--border);
-    border-radius: 7px;
-    padding: 10px 11px;
-    margin-bottom: 7px;
-    transition: border-color .2s;
+    border-radius: 8px;
+    padding: 11px 12px;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    position: relative;
   }
-  .agent-mini.active { border-color: var(--orange); }
-  .agent-mini-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
-  .agent-mini-left { display: flex; align-items: center; gap: 7px; }
-  .agent-mini-emoji { font-size: 13px; }
-  .agent-mini-name { font-family: monospace; font-size: 11px; font-weight: 700; }
-  .agent-mini-role { font-size: 9px; color: var(--muted); }
-  .tier-badge { font-family: monospace; font-size: 9px; font-weight: 700; letter-spacing: .08em; padding: 2px 7px; border-radius: 3px; border: 1px solid; }
+  .agent-card:hover { border-color: var(--border2); background: var(--surface3); }
+  .agent-card.working { border-color: var(--orange); }
+
+  .ac-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .ac-name-wrap { display: flex; align-items: center; gap: 7px; }
+  .ac-label { font-family: monospace; font-size: 9px; font-weight: 700; padding: 2px 5px; border-radius: 3px; }
+  .ac-name { font-family: monospace; font-size: 11px; font-weight: 700; }
+  .ac-role { font-size: 9px; color: var(--muted); }
+
+  .tier-badge { font-family: monospace; font-size: 9px; font-weight: 700; letter-spacing: .07em; padding: 2px 7px; border-radius: 3px; border: 1px solid; transition: transform .3s; }
   .tier-0 { color: var(--muted); border-color: var(--border); }
   .tier-1 { color: #60A5FA; border-color: rgba(96,165,250,.3); background: rgba(96,165,250,.07); }
   .tier-2 { color: var(--green); border-color: rgba(34,197,94,.3); background: rgba(34,197,94,.07); }
   .tier-3 { color: var(--yellow); border-color: rgba(251,191,36,.3); background: rgba(251,191,36,.07); }
-  .tier-4 { color: var(--orange); border-color: rgba(249,115,22,.3); background: rgba(249,115,22,.07); }
+  .tier-4 { color: var(--orange); border-color: rgba(249,115,22,.3); background: rgba(249,115,22,.08); }
 
-  .agent-mini-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
-  .ams { text-align: center; }
-  .ams-val { font-family: monospace; font-size: 12px; font-weight: 700; }
-  .ams-label { font-size: 9px; color: var(--muted); }
+  .ac-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; margin-bottom: 7px; }
+  .ac-stat { text-align: center; }
+  .ac-stat-val { font-family: monospace; font-size: 13px; font-weight: 700; }
+  .ac-stat-label { font-size: 9px; color: var(--muted); margin-top: 1px; }
 
-  .tier-progress { margin-top: 7px; height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; }
-  .tier-progress-fill { height: 100%; border-radius: 1px; transition: width .5s; background: var(--orange); }
+  .ac-progress { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .ac-progress-fill { height: 100%; border-radius: 2px; transition: width .5s ease; }
 
-  /* CONTRACTS */
-  .contract-item { background: var(--surface2); border-radius: 5px; padding: 8px 10px; margin-bottom: 5px; }
+  .ac-click-hint { position: absolute; bottom: 7px; right: 9px; font-family: monospace; font-size: 8px; color: var(--muted); opacity: 0; transition: opacity .2s; }
+  .agent-card:hover .ac-click-hint { opacity: 1; }
+
+  /* ── DISPATCH BAR ── */
+  .dispatch-bar { flex-shrink: 0; border-top: 1px solid var(--border); padding: 9px 16px; display: flex; align-items: center; gap: 10px; }
+  .dispatch-label { font-family: monospace; font-size: 10px; color: var(--muted); white-space: nowrap; letter-spacing: .08em; text-transform: uppercase; }
+  select { background: var(--surface2); border: 1px solid var(--border2); color: var(--text); padding: 7px 12px; border-radius: 5px; font-family: monospace; font-size: 11px; flex: 1; }
+  select:focus { outline: none; border-color: var(--orange); }
+  .btn { background: var(--orange); color: #0f0e0b; border: none; cursor: pointer; font-family: monospace; font-size: 11px; font-weight: 700; padding: 7px 18px; border-radius: 5px; transition: opacity .2s; letter-spacing: .04em; white-space: nowrap; }
+  .btn:hover { opacity: .85; }
+  .btn:disabled { opacity: .35; cursor: not-allowed; }
+
+  /* ── SIDEBAR ── */
+  .sidebar { overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+  .sidebar::-webkit-scrollbar { width: 3px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); }
+  .sidebar-title { font-family: monospace; font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .sidebar-title::after { content:''; flex:1; height:1px; background: var(--border); }
+
+  .contract-item { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 9px 11px; margin-bottom: 6px; }
   .contract-name { font-family: monospace; font-size: 9px; color: var(--muted); margin-bottom: 3px; }
   .contract-addr { font-family: monospace; font-size: 10px; color: var(--orange); }
-  .contract-link { font-family: monospace; font-size: 9px; color: var(--green); text-decoration: none; display: block; margin-top: 3px; }
+  .contract-link { font-family: monospace; font-size: 9px; color: var(--green); text-decoration: none; display: block; margin-top: 4px; }
   .contract-link:hover { text-decoration: underline; }
 
-  /* OVERLAY */
-  .overlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; z-index: 100; }
-  .overlay.hidden { display: none; }
+  .tier-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .tier-row:last-child { border: none; }
+  .tier-req { font-family: monospace; font-size: 9px; color: var(--muted); }
+
+  .erc-item { font-family: monospace; font-size: 10px; color: var(--green); margin-bottom: 4px; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(15,14,11,.85);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 200; backdrop-filter: blur(4px);
+    opacity: 0; pointer-events: none; transition: opacity .2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    width: 520px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(12px);
+    transition: transform .25s;
+  }
+  .modal-overlay.open .modal { transform: none; }
+
+  .modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .modal-agent-info { display: flex; align-items: center; gap: 14px; }
+  .modal-agent-label { font-family: monospace; font-size: 13px; font-weight: 700; padding: 6px 10px; border-radius: 6px; }
+  .modal-agent-name { font-family: monospace; font-size: 18px; font-weight: 700; }
+  .modal-agent-role { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .modal-close { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; line-height: 1; padding: 2px 6px; border-radius: 4px; transition: color .2s; }
+  .modal-close:hover { color: var(--text); }
+
+  .modal-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .modal-stat { background: var(--surface); padding: 14px 16px; }
+  .modal-stat-val { font-family: monospace; font-size: 22px; font-weight: 700; }
+  .modal-stat-label { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+  .modal-body { overflow-y: auto; padding: 20px 24px; flex: 1; }
+  .modal-body::-webkit-scrollbar { width: 4px; }
+  .modal-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .modal-section-title { font-family: monospace; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; margin-top: 18px; display: flex; align-items: center; gap: 8px; }
+  .modal-section-title:first-child { margin-top: 0; }
+  .modal-section-title::after { content:''; flex:1; height:1px; background: var(--border); }
+
+  .tier-timeline { display: flex; gap: 6px; margin-bottom: 4px; }
+  .tier-step { flex: 1; height: 4px; border-radius: 2px; background: var(--border); transition: background .4s; }
+  .tier-step.active { background: var(--orange); }
+
+  .tier-progress-detail { display: flex; justify-content: space-between; font-family: monospace; font-size: 10px; color: var(--muted); margin-top: 5px; }
+
+  .next-tier-req { background: var(--surface2); border-radius: 6px; padding: 10px 12px; margin-top: 10px; font-family: monospace; font-size: 11px; line-height: 1.7; color: var(--muted); }
+  .next-tier-req span { color: var(--text); }
+
+  .task-history { display: flex; flex-direction: column; gap: 7px; }
+  .task-history-item { background: var(--surface2); border-radius: 6px; padding: 10px 12px; border: 1px solid var(--border); }
+  .thi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+  .thi-title { font-size: 11px; color: var(--text); }
+  .thi-score { font-family: monospace; font-size: 11px; font-weight: 700; color: var(--green); }
+  .thi-meta { font-family: monospace; font-size: 9px; color: var(--muted); display: flex; align-items: center; gap: 10px; }
+  .thi-tx { color: var(--green); text-decoration: none; }
+  .thi-tx:hover { text-decoration: underline; }
+  .thi-bar { height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; margin-top: 6px; }
+  .thi-bar-fill { height: 100%; background: var(--green); border-radius: 1px; }
+
+  .empty-history { font-family: monospace; font-size: 11px; color: var(--muted); text-align: center; padding: 24px 0; }
+
+  /* ── OVERLAY ── */
+  .boot-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; z-index: 300; }
+  .boot-overlay.hidden { display: none; }
   .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--orange); border-radius: 50%; animation: spin .8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .overlay-text { font-family: monospace; font-size: 12px; color: var(--muted); }
+  .boot-text { font-family: monospace; font-size: 12px; color: var(--muted); }
 </style>
 </head>
 <body>
 
-<div id="overlay" class="overlay">
+<div id="boot-overlay" class="boot-overlay">
   <div class="spinner"></div>
-  <div class="overlay-text" id="overlay-text">Connecting to Base Sepolia...</div>
+  <div class="boot-text" id="boot-text">Connecting to Base Sepolia...</div>
+</div>
+
+<!-- AGENT PROFILE MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-agent-info">
+        <div class="modal-agent-label" id="modal-label">BUG</div>
+        <div>
+          <div class="modal-agent-name" id="modal-name">—</div>
+          <div class="modal-agent-role" id="modal-role">—</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-stats">
+      <div class="modal-stat"><div class="modal-stat-val" id="modal-tasks">0</div><div class="modal-stat-label">Tasks</div></div>
+      <div class="modal-stat"><div class="modal-stat-val" id="modal-avg">—</div><div class="modal-stat-label">Avg Score</div></div>
+      <div class="modal-stat"><div class="modal-stat-val" id="modal-tier-num">0</div><div class="modal-stat-label">Tier</div></div>
+      <div class="modal-stat"><div class="modal-stat-val" id="modal-tier-name" style="font-size:14px;padding-top:4px">UNRANKED</div><div class="modal-stat-label">Status</div></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section-title">Reputation Progress</div>
+      <div class="tier-timeline" id="modal-timeline"></div>
+      <div class="tier-progress-detail">
+        <span id="modal-prog-label">—</span>
+        <span id="modal-prog-next">Next: JUNIOR</span>
+      </div>
+      <div class="next-tier-req" id="modal-next-req">—</div>
+
+      <div class="modal-section-title">Onchain Task History</div>
+      <div class="task-history" id="modal-history"></div>
+    </div>
+  </div>
 </div>
 
 <!-- HEADER -->
 <header>
   <div class="logo"><div class="logo-dot"></div>FUSEBOX × ERC-8004</div>
-  <div class="header-center">
+  <div class="stat-pills">
     <div class="stat-pill"><span class="stat-pill-val" id="stat-tasks">0</span><span class="stat-pill-label">tasks</span></div>
     <div class="stat-pill"><span class="stat-pill-val" id="stat-txs">0</span><span class="stat-pill-label">onchain</span></div>
     <div class="stat-pill"><span class="stat-pill-val" id="stat-avg">—</span><span class="stat-pill-label">avg score</span></div>
@@ -219,62 +306,39 @@
 <!-- BODY -->
 <div class="body">
 
-  <!-- KANBAN + DISPATCH -->
-  <div style="display:flex;flex-direction:column;overflow:hidden;">
+  <!-- LEFT: KANBAN + AGENTS + DISPATCH -->
+  <div class="kanban-area">
+
+    <!-- KANBAN -->
     <div class="kanban-wrap" id="kanban">
-      <!-- BACKLOG -->
       <div class="col">
-        <div class="col-header">
-          <span class="col-title" style="color:var(--muted)">Backlog</span>
-          <span class="col-count" id="count-backlog">0</span>
-        </div>
+        <div class="col-header"><span class="col-title" style="color:var(--muted)">Backlog</span><span class="col-count" id="count-backlog">0</span></div>
         <div class="col-body" id="col-backlog"></div>
       </div>
-
-      <div class="col-arrow">→</div>
-
-      <!-- ASSIGNED -->
+      <div class="col-arrow">›</div>
       <div class="col">
-        <div class="col-header">
-          <span class="col-title" style="color:var(--blue)">Assigned</span>
-          <span class="col-count" id="count-assigned">0</span>
-        </div>
+        <div class="col-header"><span class="col-title" style="color:var(--blue)">Assigned</span><span class="col-count" id="count-assigned">0</span></div>
         <div class="col-body" id="col-assigned"></div>
       </div>
-
-      <div class="col-arrow">→</div>
-
-      <!-- IN PROGRESS -->
+      <div class="col-arrow">›</div>
       <div class="col">
-        <div class="col-header">
-          <span class="col-title" style="color:var(--orange)">In Progress</span>
-          <span class="col-count" id="count-progress">0</span>
-        </div>
+        <div class="col-header"><span class="col-title" style="color:var(--orange)">In Progress</span><span class="col-count" id="count-progress">0</span></div>
         <div class="col-body" id="col-progress"></div>
       </div>
-
-      <div class="col-arrow">→</div>
-
-      <!-- VERIFYING -->
+      <div class="col-arrow">›</div>
       <div class="col">
-        <div class="col-header">
-          <span class="col-title" style="color:var(--purple)">Verifying</span>
-          <span class="col-count" id="count-verifying">0</span>
-        </div>
+        <div class="col-header"><span class="col-title" style="color:var(--purple)">Verifying</span><span class="col-count" id="count-verifying">0</span></div>
         <div class="col-body" id="col-verifying"></div>
       </div>
-
-      <div class="col-arrow">→</div>
-
-      <!-- DONE -->
+      <div class="col-arrow">›</div>
       <div class="col">
-        <div class="col-header">
-          <span class="col-title" style="color:var(--green)">Done</span>
-          <span class="col-count" id="count-done">0</span>
-        </div>
+        <div class="col-header"><span class="col-title" style="color:var(--green)">Done</span><span class="col-count" id="count-done">0</span></div>
         <div class="col-body" id="col-done"></div>
       </div>
     </div>
+
+    <!-- AGENT ROW -->
+    <div class="agent-row" id="agent-row"></div>
 
     <!-- DISPATCH BAR -->
     <div class="dispatch-bar">
@@ -293,57 +357,43 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-
-    <div class="sidebar-section">
-      <div class="sidebar-title">Agents</div>
-      <div id="agents-list"></div>
-    </div>
-
-    <div class="sidebar-section">
+    <div>
       <div class="sidebar-title">Contracts</div>
       <div class="contract-item">
         <div class="contract-name">AGENT REGISTRY (ERC-721)</div>
         <div class="contract-addr">0x21CF...da31</div>
-        <a class="contract-link" href="https://sepolia.basescan.org/address/0x21CF7F8E526fd82c64C1d758E0CEbB707Ae2da31" target="_blank">↗ View on Basescan</a>
+        <a class="contract-link" href="https://sepolia.basescan.org/address/0x21CF7F8E526fd82c64C1d758E0CEbB707Ae2da31" target="_blank">↗ Basescan</a>
       </div>
       <div class="contract-item">
         <div class="contract-name">REPUTATION REGISTRY</div>
         <div class="contract-addr">0x5a79...809C</div>
-        <a class="contract-link" href="https://sepolia.basescan.org/address/0x5a79322a978b7CB0Aee38CdA7C526bA40f95809C" target="_blank">↗ View on Basescan</a>
+        <a class="contract-link" href="https://sepolia.basescan.org/address/0x5a79322a978b7CB0Aee38CdA7C526bA40f95809C" target="_blank">↗ Basescan</a>
       </div>
     </div>
 
-    <div class="sidebar-section">
+    <div>
       <div class="sidebar-title">Tier Requirements</div>
-      <div style="display:flex;flex-direction:column;gap:5px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)">
-          <span class="tier-badge tier-1">JUNIOR</span><span style="font-family:monospace;font-size:9px;color:var(--muted)">3 tasks · 60+ avg</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)">
-          <span class="tier-badge tier-2">SENIOR</span><span style="font-family:monospace;font-size:9px;color:var(--muted)">10 tasks · 70+ avg</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)">
-          <span class="tier-badge tier-3">LEAD</span><span style="font-family:monospace;font-size:9px;color:var(--muted)">20 tasks · 80+ avg</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0">
-          <span class="tier-badge tier-4">PRINCIPAL</span><span style="font-family:monospace;font-size:9px;color:var(--muted)">50 tasks · 90+ avg</span>
-        </div>
-      </div>
+      <div class="tier-row"><span class="tier-badge tier-1">JUNIOR</span><span class="tier-req">3 tasks · 60+</span></div>
+      <div class="tier-row"><span class="tier-badge tier-2">SENIOR</span><span class="tier-req">10 tasks · 70+</span></div>
+      <div class="tier-row"><span class="tier-badge tier-3">LEAD</span><span class="tier-req">20 tasks · 80+</span></div>
+      <div class="tier-row"><span class="tier-badge tier-4">PRINCIPAL</span><span class="tier-req">50 tasks · 90+</span></div>
     </div>
 
-    <div class="sidebar-section">
+    <div>
       <div class="sidebar-title">ERC-8004</div>
-      <div style="display:flex;flex-direction:column;gap:4px;">
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">• Identity Registry (ERC-721)</div>
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">• Reputation Registry</div>
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">• Validation Registry</div>
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">• agent-card.json</div>
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">• Evidence hashes onchain</div>
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">• Pluggable trust models</div>
-        <div style="font-family:monospace;font-size:10px;color:var(--green)">• Multi-agent swarm</div>
-      </div>
+      <div class="erc-item">• Identity Registry (ERC-721)</div>
+      <div class="erc-item">• Reputation Registry</div>
+      <div class="erc-item">• Validation Registry</div>
+      <div class="erc-item">• agent-card.json endpoint</div>
+      <div class="erc-item">• Evidence hashes onchain</div>
+      <div class="erc-item">• Pluggable trust models</div>
+      <div class="erc-item">• Multi-agent swarm</div>
     </div>
 
+    <div>
+      <div class="sidebar-title">GitHub</div>
+      <a class="contract-link" href="https://github.com/boltsssss/fusebox-erc8004" target="_blank">↗ boltsssss/fusebox-erc8004</a>
+    </div>
   </div>
 </div>
 
@@ -352,158 +402,163 @@ const RPC = "https://sepolia.base.org";
 const PRIVATE_KEY = "e51e176915a70bc38300aacc8a5c61e0beccbf5599138ca658639751cab5b745";
 const AGENT_REGISTRY = "0x21CF7F8E526fd82c64C1d758E0CEbB707Ae2da31";
 const REPUTATION_REGISTRY = "0x5a79322a978b7CB0Aee38CdA7C526bA40f95809C";
-
-const AGENT_ABI = ["function registerAgent(string calldata agentURI) external returns (uint256)","function totalAgents() external view returns (uint256)"];
-const REP_ABI = ["function recordCompletion(uint256 agentId, uint8 taskType, uint8 score, bytes32 evidenceHash, string calldata metadata) external","function getReputation(uint256 agentId) external view returns (uint256 tasks, uint256 avgScore, uint8 tier, string memory tierName)"];
+const REP_ABI = [
+  "function recordCompletion(uint256 agentId, uint8 taskType, uint8 score, bytes32 evidenceHash, string calldata metadata) external",
+  "function getReputation(uint256 agentId) external view returns (uint256 tasks, uint256 avgScore, uint8 tier, string memory tierName)"
+];
 
 const AGENTS = [
-  { idx:0, name:"Nexus-1", role:"Bug Fixer",       emoji:"BUG", color:"#EF4444", taskType:0 },
-  { idx:1, name:"Forge-2", role:"Feature Builder", emoji:"FEAT", color:"#4A9EFF", taskType:1 },
-  { idx:2, name:"Prism-3", role:"Refactorer",      emoji:"REF", color:"#22C55E", taskType:2 },
-  { idx:3, name:"Probe-4", role:"Test Engineer",   emoji:"TEST", color:"#FBBF24", taskType:3 },
-  { idx:4, name:"Lens-5",  role:"Code Reviewer",  emoji:"REV", color:"#A78BFA", taskType:4 },
+  { idx:0, key:"BUG",  name:"Nexus-1", role:"Bug Fixer",        color:"#EF4444", taskType:0 },
+  { idx:1, key:"FEAT", name:"Forge-2", role:"Feature Builder",  color:"#4A9EFF", taskType:1 },
+  { idx:2, key:"REF",  name:"Prism-3", role:"Refactorer",       color:"#22C55E", taskType:2 },
+  { idx:3, key:"TEST", name:"Probe-4", role:"Test Engineer",    color:"#FBBF24", taskType:3 },
+  { idx:4, key:"REV",  name:"Lens-5",  role:"Code Reviewer",    color:"#A78BFA", taskType:4 },
 ];
 
 const TASKS = {
-  0: { title:"Race condition in async queue", file:"src/workers/queue.ts" },
-  1: { title:"Webhook retry with backoff",    file:"src/services/webhook.ts" },
-  2: { title:"Extract auth middleware",       file:"src/routes/*.ts" },
-  3: { title:"Payment module test coverage", file:"tests/payment.spec.ts" },
-  4: { title:"API gateway arch review",      file:"src/gateway/**" },
+  0:{ title:"Race condition in async queue",    file:"src/workers/queue.ts" },
+  1:{ title:"Webhook retry with backoff",        file:"src/services/webhook.ts" },
+  2:{ title:"Extract auth middleware",           file:"src/routes/*.ts" },
+  3:{ title:"Payment module test coverage",     file:"tests/payment.spec.ts" },
+  4:{ title:"API gateway architecture review",  file:"src/gateway/**" },
 };
 
 const TIER_NAMES = ["UNRANKED","JUNIOR","SENIOR","LEAD","PRINCIPAL"];
+const TIER_REQS  = [[0,0],[3,60],[10,70],[20,80],[50,90]];
 
-let provider, wallet, agentContract, repContract;
-let agentState = AGENTS.map(a => ({...a, tasks:0, avgScore:0, tier:0}));
+let provider, wallet, repContract;
+let agentState = AGENTS.map(a => ({...a, tasks:0, avgScore:0, tier:0, history:[]}));
 let totalTasks=0, totalTxs=0, totalUpgrades=0, allScores=[];
-let dispatching = false;
-let cardIdCounter = 0;
+let dispatching=false, cardCount=0;
 
+// ── INIT ──────────────────────────────────────────────────────────────────────
 async function init() {
   try {
     provider = new ethers.JsonRpcProvider(RPC);
-    wallet = new ethers.Wallet(PRIVATE_KEY, provider);
-    agentContract = new ethers.Contract(AGENT_REGISTRY, AGENT_ABI, wallet);
+    wallet   = new ethers.Wallet(PRIVATE_KEY, provider);
     repContract = new ethers.Contract(REPUTATION_REGISTRY, REP_ABI, wallet);
     const bal = await provider.getBalance(wallet.address);
     document.getElementById("balance").textContent = parseFloat(ethers.formatEther(bal)).toFixed(4) + " ETH";
-    await loadOnchainState();
-    document.getElementById("overlay").classList.add("hidden");
-    document.getElementById("dispatch-btn").disabled = false;
+    for (let i = 0; i < 5; i++) {
+      try {
+        const r = await repContract.getReputation(i);
+        agentState[i].tasks    = Number(r[0]);
+        agentState[i].avgScore = Number(r[1]);
+        agentState[i].tier     = Number(r[2]);
+        totalTasks += Number(r[0]);
+        for(let t=0;t<Number(r[0]);t++) allScores.push(Number(r[1]));
+      } catch(e){}
+    }
+    updateStats();
   } catch(e) {
-    document.getElementById("overlay-text").textContent = "Demo mode — simulating onchain";
-    setTimeout(() => document.getElementById("overlay").classList.add("hidden"), 1200);
-    document.getElementById("dispatch-btn").disabled = false;
+    document.getElementById("boot-text").textContent = "Demo mode — simulating onchain";
+    await sleep(1000);
   }
-  renderAgents();
+  renderAgentRow();
   updateCounts();
+  document.getElementById("boot-overlay").classList.add("hidden");
+  document.getElementById("dispatch-btn").disabled = false;
 }
 
-async function loadOnchainState() {
-  for (let i = 0; i < 5; i++) {
-    try {
-      const r = await repContract.getReputation(i);
-      agentState[i].tasks = Number(r[0]);
-      agentState[i].avgScore = Number(r[1]);
-      agentState[i].tier = Number(r[2]);
-      totalTasks += Number(r[0]);
-      for(let t=0;t<Number(r[0]);t++) allScores.push(Number(r[1]));
-    } catch(e) {}
-  }
-  updateStats();
-}
-
-function renderAgents() {
-  const list = document.getElementById("agents-list");
-  list.innerHTML = agentState.map(a => `
-    <div class="agent-mini" id="agent-mini-${a.idx}">
-      <div class="agent-mini-top">
-        <div class="agent-mini-left">
-          <span style="font-family:monospace;font-size:9px;font-weight:700;color:${a.color};background:${a.color}22;padding:3px 5px;border-radius:3px;">${a.emoji}</span>
+// ── AGENT ROW ─────────────────────────────────────────────────────────────────
+function renderAgentRow() {
+  document.getElementById("agent-row").innerHTML = agentState.map(a => `
+    <div class="agent-card" id="ac-${a.idx}" onclick="openModal(${a.idx})">
+      <div class="ac-top">
+        <div class="ac-name-wrap">
+          <span class="ac-label" style="color:${a.color};background:${a.color}22;">${a.key}</span>
           <div>
-            <div class="agent-mini-name">${a.name}</div>
-            <div class="agent-mini-role">${a.role}</div>
+            <div class="ac-name">${a.name}</div>
+            <div class="ac-role">${a.role}</div>
           </div>
         </div>
-        <span class="tier-badge tier-${a.tier}" id="tier-badge-${a.idx}">${TIER_NAMES[a.tier]}</span>
+        <span class="tier-badge tier-${a.tier}" id="tb-${a.idx}">${TIER_NAMES[a.tier]}</span>
       </div>
-      <div class="agent-mini-stats">
-        <div class="ams"><div class="ams-val" style="color:${a.color}" id="a${a.idx}-tasks">${a.tasks}</div><div class="ams-label">TASKS</div></div>
-        <div class="ams"><div class="ams-val" id="a${a.idx}-score">${a.avgScore||'—'}</div><div class="ams-label">AVG</div></div>
-        <div class="ams"><div class="ams-val" id="a${a.idx}-tier">${a.tier}/4</div><div class="ams-label">TIER</div></div>
+      <div class="ac-stats">
+        <div class="ac-stat"><div class="ac-stat-val" style="color:${a.color}" id="ac-tasks-${a.idx}">${a.tasks}</div><div class="ac-stat-label">TASKS</div></div>
+        <div class="ac-stat"><div class="ac-stat-val" id="ac-avg-${a.idx}">${a.avgScore||'—'}</div><div class="ac-stat-label">AVG</div></div>
+        <div class="ac-stat"><div class="ac-stat-val" id="ac-tier-${a.idx}">${a.tier}/4</div><div class="ac-stat-label">TIER</div></div>
       </div>
-      <div class="tier-progress"><div class="tier-progress-fill" id="a${a.idx}-prog" style="width:${tierPct(a)}%;background:${a.color}"></div></div>
+      <div class="ac-progress"><div class="ac-progress-fill" id="ac-prog-${a.idx}" style="width:${tierPct(a)}%;background:${a.color}"></div></div>
+      <div class="ac-click-hint">View profile →</div>
     </div>
   `).join('');
 }
 
-function tierPct(a) {
-  const next = [[0,0],[3,60],[10,70],[20,80],[50,90]];
-  if (a.tier >= 4) return 100;
-  const n = next[a.tier+1];
-  return Math.min(Math.round((a.tasks/n[0])*50 + (a.avgScore ? (a.avgScore/n[1])*50 : 0)), 95);
+function updateAgentCard(idx) {
+  const a = agentState[idx];
+  document.getElementById(`ac-tasks-${idx}`).textContent = a.tasks;
+  document.getElementById(`ac-avg-${idx}`).textContent   = a.avgScore || '—';
+  document.getElementById(`ac-tier-${idx}`).textContent  = a.tier+"/4";
+  document.getElementById(`ac-prog-${idx}`).style.width  = tierPct(a)+"%";
+  const tb = document.getElementById(`tb-${idx}`);
+  tb.className = `tier-badge tier-${a.tier}`;
+  tb.textContent = TIER_NAMES[a.tier];
 }
 
-function calcTier(tasks, avg) {
-  if (tasks>=50&&avg>=90) return 4;
-  if (tasks>=20&&avg>=80) return 3;
-  if (tasks>=10&&avg>=70) return 2;
-  if (tasks>=3&&avg>=60)  return 1;
-  return 0;
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(idx) {
+  const a = agentState[idx];
+  document.getElementById("modal-label").textContent    = a.key;
+  document.getElementById("modal-label").style.cssText  = `color:${a.color};background:${a.color}22;font-family:monospace;font-size:13px;font-weight:700;padding:6px 10px;border-radius:6px;`;
+  document.getElementById("modal-name").textContent     = a.name;
+  document.getElementById("modal-role").textContent     = a.role;
+  document.getElementById("modal-tasks").textContent    = a.tasks;
+  document.getElementById("modal-tasks").style.color    = a.color;
+  document.getElementById("modal-avg").textContent      = a.avgScore || '—';
+  document.getElementById("modal-tier-num").textContent = a.tier;
+  document.getElementById("modal-tier-name").textContent= TIER_NAMES[a.tier];
+
+  // Timeline
+  const tl = document.getElementById("modal-timeline");
+  tl.innerHTML = Array.from({length:4},(_,i)=>`<div class="tier-step ${i<a.tier?'active':''}"></div>`).join('');
+
+  // Progress to next tier
+  const progLabel = document.getElementById("modal-prog-label");
+  const progNext  = document.getElementById("modal-prog-next");
+  const nextReq   = document.getElementById("modal-next-req");
+  if (a.tier >= 4) {
+    progLabel.textContent = "Maximum tier achieved";
+    progNext.textContent  = "";
+    nextReq.textContent   = "This agent has reached PRINCIPAL status.";
+  } else {
+    const req = TIER_REQS[a.tier+1];
+    const tasksLeft = Math.max(0, req[0]-a.tasks);
+    const scoreLeft = Math.max(0, req[1]-a.avgScore);
+    progLabel.textContent = `${a.tasks}/${req[0]} tasks · ${a.avgScore||0}/${req[1]} avg`;
+    progNext.textContent  = `Next: ${TIER_NAMES[a.tier+1]}`;
+    nextReq.innerHTML = `Needs <span>${tasksLeft} more task${tasksLeft!==1?'s':''}</span> and avg score of <span>${req[1]}+</span> to reach ${TIER_NAMES[a.tier+1]}.`;
+  }
+
+  // History
+  const hist = document.getElementById("modal-history");
+  if (!a.history.length) {
+    hist.innerHTML = `<div class="empty-history">No tasks completed yet.<br>Dispatch a task to start building reputation.</div>`;
+  } else {
+    hist.innerHTML = [...a.history].reverse().map(h => `
+      <div class="task-history-item">
+        <div class="thi-top">
+          <span class="thi-title">${h.title}</span>
+          <span class="thi-score">${h.score}/100</span>
+        </div>
+        <div class="thi-bar"><div class="thi-bar-fill" style="width:${h.score}%"></div></div>
+        <div class="thi-meta">
+          <span>${h.file}</span>
+          <span>${h.time}</span>
+          ${h.txHash ? `<a class="thi-tx" href="https://sepolia.basescan.org/tx/${h.txHash}" target="_blank">↗ tx</a>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById("modal-overlay").classList.add("open");
 }
 
-function makeCard(taskType, status) {
-  const id = "card-" + (++cardIdCounter);
-  const task = TASKS[taskType];
-  const agent = agentState[taskType];
-  const div = document.createElement("div");
-  div.className = "task-card";
-  div.id = id;
-  div.innerHTML = `
-    <div class="task-top">
-      <span style="font-family:monospace;font-size:9px;font-weight:700;color:${agent.color};background:${agent.color}22;padding:2px 5px;border-radius:3px;flex-shrink:0;margin-top:1px;">${agent.emoji}</span>
-      <span class="task-title">${task.title}</span>
-    </div>
-    <div class="task-file">${task.file}</div>
-    <div class="task-agent">
-      <span class="task-agent-name">${agent.name} · ${agent.role}</span>
-    </div>
-    <div class="task-status"><div class="task-status-dot" id="${id}-dot"></div><span id="${id}-statustext">Queued</span></div>
-  `;
-  return { el: div, id };
+function closeModal(e) {
+  if (e.target.id === "modal-overlay") document.getElementById("modal-overlay").classList.remove("open");
 }
 
-function moveCard(cardEl, fromColId, toColId) {
-  const from = document.getElementById(fromColId);
-  const to = document.getElementById(toColId);
-  if (from && cardEl.parentNode === from) from.removeChild(cardEl);
-  to.insertBefore(cardEl, to.firstChild);
-  updateCounts();
-}
-
-function setStatus(cardId, state, text) {
-  const dot = document.getElementById(cardId + "-dot");
-  const txt = document.getElementById(cardId + "-statustext");
-  if (!dot||!txt) return;
-  dot.className = "task-status-dot" + (state==="working"?" working":state==="verifying"?" verifying":state==="done"?" done":"");
-  txt.textContent = text;
-}
-
-function addScore(cardEl, cardId, score) {
-  const scoreDiv = document.createElement("div");
-  scoreDiv.className = "task-score";
-  scoreDiv.innerHTML = `<div class="task-score-bar"><div class="task-score-fill" style="width:${score}%"></div></div><div class="task-score-label">Quality score: ${score}/100</div>`;
-  cardEl.appendChild(scoreDiv);
-}
-
-function addTxLink(cardEl, txHash) {
-  const txDiv = document.createElement("div");
-  txDiv.className = "task-tx";
-  txDiv.innerHTML = `<a href="https://sepolia.basescan.org/tx/${txHash}" target="_blank">↗ ${txHash.slice(0,14)}...${txHash.slice(-6)}</a>`;
-  cardEl.appendChild(txDiv);
-}
-
+// ── KANBAN DISPATCH ───────────────────────────────────────────────────────────
 async function dispatchTask() {
   const taskType = parseInt(document.getElementById("task-select").value);
   if (isNaN(taskType) || dispatching) return;
@@ -511,58 +566,89 @@ async function dispatchTask() {
   document.getElementById("dispatch-btn").disabled = true;
 
   const agent = agentState[taskType];
-  const { el, id } = makeCard(taskType);
+  const task  = TASKS[taskType];
+  const cardId = "c"+(++cardCount);
 
-  // → BACKLOG
+  // Build card
+  const el = document.createElement("div");
+  el.className = "task-card";
+  el.id = cardId;
+  el.innerHTML = `
+    <div class="tc-top">
+      <span class="tc-label" style="color:${agent.color};background:${agent.color}22;">${agent.key}</span>
+      <span class="tc-title">${task.title}</span>
+    </div>
+    <div class="tc-file">${task.file}</div>
+    <div class="tc-agent">${agent.name} · ${agent.role}</div>
+    <div class="tc-status"><div class="tc-dot" id="${cardId}-dot"></div><span id="${cardId}-st">Queued</span></div>
+  `;
+
+  const move = (from, to) => {
+    const f = document.getElementById("col-"+from);
+    const t = document.getElementById("col-"+to);
+    if (f && el.parentNode===f) f.removeChild(el);
+    t.insertBefore(el, t.firstChild);
+    updateCounts();
+  };
+
+  const setStatus = (state, text) => {
+    const dot = document.getElementById(cardId+"-dot");
+    const st  = document.getElementById(cardId+"-st");
+    dot.className = "tc-dot"+(state==="w"?" w":state==="v"?" v":state==="d"?" d":"");
+    st.textContent = text;
+  };
+
+  // BACKLOG
   document.getElementById("col-backlog").insertBefore(el, document.getElementById("col-backlog").firstChild);
-  updateCounts();
-  await sleep(600);
+  updateCounts(); await sleep(500);
 
-  // → ASSIGNED
-  setStatus(id, "", "Assigned to " + agent.name);
-  el.classList.add("active");
-  moveCard(el, "col-backlog", "col-assigned");
-  document.getElementById("agent-mini-" + agent.idx).classList.add("active");
-  await sleep(800);
+  // ASSIGNED
+  el.classList.add("assigned");
+  setStatus("","Assigned to "+agent.name);
+  document.getElementById("ac-"+agent.idx).classList.add("working");
+  move("backlog","assigned"); await sleep(700);
 
-  // → IN PROGRESS
-  setStatus(id, "working", "Scanning codebase...");
-  moveCard(el, "col-assigned", "col-progress");
-  await sleep(900);
-  setStatus(id, "working", "Generating solution...");
-  await sleep(800);
-  setStatus(id, "working", "Running tests...");
-  await sleep(700);
+  // IN PROGRESS
+  el.classList.remove("assigned"); el.classList.add("active");
+  setStatus("w","Scanning codebase...");
+  move("assigned","progress"); await sleep(900);
+  setStatus("w","Generating solution..."); await sleep(700);
+  setStatus("w","Running tests..."); await sleep(600);
 
   const score = Math.floor(Math.random()*14)+85;
-  addScore(el, id, score);
+  const scoreEl = document.createElement("div");
+  scoreEl.className = "tc-score";
+  scoreEl.innerHTML = `<div class="tc-score-bar"><div class="tc-score-fill" style="width:${score}%"></div></div><div class="tc-score-label">Score: ${score}/100</div>`;
+  el.appendChild(scoreEl);
+  await sleep(400);
 
-  // → VERIFYING
-  setStatus(id, "verifying", "Hashing evidence...");
-  el.classList.remove("active");
-  el.classList.add("verifying");
-  moveCard(el, "col-progress", "col-verifying");
-  await sleep(600);
-  setStatus(id, "verifying", "Writing to chain...");
+  // VERIFYING
+  el.classList.remove("active"); el.classList.add("verifying");
+  setStatus("v","Hashing evidence...");
+  move("progress","verifying"); await sleep(500);
+  setStatus("v","Writing to chain...");
 
   // ONCHAIN
   let txHash;
   try {
-    const evidenceHash = ethers.keccak256(ethers.toUtf8Bytes(TASKS[taskType].title + "|" + Date.now() + "|" + score));
-    const tx = await repContract.recordCompletion(taskType, taskType, score, evidenceHash, "fusebox:" + taskType);
+    const evHash = ethers.keccak256(ethers.toUtf8Bytes(task.title+"|"+Date.now()+"|"+score));
+    const tx = await repContract.recordCompletion(taskType, taskType, score, evHash, "fusebox:"+taskType);
     await tx.wait();
     txHash = tx.hash;
   } catch(e) {
-    txHash = "0x" + Array.from({length:64},()=>Math.floor(Math.random()*16).toString(16)).join('');
+    txHash = "0x"+Array.from({length:64},()=>Math.floor(Math.random()*16).toString(16)).join('');
   }
   totalTxs++;
 
-  // → DONE
-  el.classList.remove("verifying");
-  el.classList.add("done");
-  setStatus(id, "done", "Verified · " + score + "/100");
-  addTxLink(el, txHash);
-  moveCard(el, "col-verifying", "col-done");
+  // DONE
+  el.classList.remove("verifying"); el.classList.add("done");
+  setStatus("d","Verified · "+score+"/100");
+  const txEl = document.createElement("div");
+  txEl.className = "tc-tx";
+  txEl.innerHTML = `<a href="https://sepolia.basescan.org/tx/${txHash}" target="_blank">↗ ${txHash.slice(0,14)}...${txHash.slice(-6)}</a>`;
+  el.appendChild(txEl);
+  move("verifying","done");
+  document.getElementById("ac-"+agent.idx).classList.remove("working");
 
   // Update agent state
   const oldTier = agent.tier;
@@ -570,22 +656,22 @@ async function dispatchTask() {
   allScores.push(score);
   agent.avgScore = Math.round((agent.avgScore*(agent.tasks-1)+score)/agent.tasks);
   agent.tier = calcTier(agent.tasks, agent.avgScore);
+  agent.history.push({ title: task.title, file: task.file, score, txHash, time: new Date().toLocaleTimeString() });
   totalTasks++;
 
-  document.getElementById("a"+agent.idx+"-tasks").textContent = agent.tasks;
-  document.getElementById("a"+agent.idx+"-score").textContent = agent.avgScore;
-  document.getElementById("a"+agent.idx+"-tier").textContent = agent.tier+"/4";
-  document.getElementById("a"+agent.idx+"-prog").style.width = tierPct(agent)+"%";
-  document.getElementById("agent-mini-"+agent.idx).classList.remove("active");
+  updateAgentCard(agent.idx);
 
-  if (agent.tier !== oldTier) {
+  if (agent.tier > oldTier) {
     totalUpgrades++;
-    const badge = document.getElementById("tier-badge-"+agent.idx);
-    badge.className = "tier-badge tier-"+agent.tier;
-    badge.textContent = TIER_NAMES[agent.tier];
-    // Flash
-    badge.style.transform = "scale(1.3)";
-    setTimeout(()=>badge.style.transform="",400);
+    const tb = document.getElementById(`tb-${agent.idx}`);
+    tb.style.transform = "scale(1.25)";
+    setTimeout(()=>tb.style.transform="",400);
+  }
+
+  // If modal is open for this agent, refresh it
+  if (document.getElementById("modal-overlay").classList.contains("open") &&
+      document.getElementById("modal-name").textContent === agent.name) {
+    openModal(agent.idx);
   }
 
   updateStats();
@@ -594,9 +680,24 @@ async function dispatchTask() {
   document.getElementById("task-select").value = "";
 }
 
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function calcTier(tasks, avg) {
+  if (tasks>=50&&avg>=90) return 4;
+  if (tasks>=20&&avg>=80) return 3;
+  if (tasks>=10&&avg>=70) return 2;
+  if (tasks>=3&&avg>=60)  return 1;
+  return 0;
+}
+
+function tierPct(a) {
+  if (a.tier>=4) return 100;
+  const n = TIER_REQS[a.tier+1];
+  return Math.min(Math.round((a.tasks/n[0])*50 + (a.avgScore?(a.avgScore/n[1])*50:0)), 95);
+}
+
 function updateStats() {
   document.getElementById("stat-tasks").textContent = totalTasks;
-  document.getElementById("stat-txs").textContent = totalTxs;
+  document.getElementById("stat-txs").textContent   = totalTxs;
   document.getElementById("stat-upgrades").textContent = totalUpgrades;
   const avg = allScores.length ? Math.round(allScores.reduce((a,b)=>a+b,0)/allScores.length) : null;
   document.getElementById("stat-avg").textContent = avg ? avg+"/100" : "—";
@@ -605,7 +706,7 @@ function updateStats() {
 function updateCounts() {
   ["backlog","assigned","progress","verifying","done"].forEach(c => {
     const el = document.getElementById("col-"+c);
-    document.getElementById("count-"+c).textContent = el ? el.children.length : 0;
+    document.getElementById("count-"+c).textContent = el?el.children.length:0;
   });
 }
 
