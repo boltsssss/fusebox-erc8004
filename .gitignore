@@ -3,3 +3,9 @@ node_modules/
 *.env
 cache/
 artifacts/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
